@@ -47,13 +47,17 @@ div {
 	text-transform: uppercase;
 	background-color: #E7AE00;
 }
+#login-banner {
+	text-transform: uppercase;
+	background-color: #E76200;
+}
 .window {
 	width: 100%;
 	float: left;
-	background-color: silver; /* test */
+	/*background-color: silver; /* test */
 	/*min-height: 470px; /* test */
 }
-#registration {
+#regi-login-content {
 	width: 880px;
 	margin: 10px;
 	background-color: #444;
