@@ -15,10 +15,11 @@ div {
 	margin-left: auto;
 	margin-right: auto;
 	background-color: gold; /* test */
+	height: 500px; /* test */
 }
 .ribbon {
 	margin: 10px;
-	width: 760px;
+	width: 780px;
 	float: left;
 	text-align: center;
 	line-height: 200%;
@@ -39,4 +40,7 @@ div {
 	text-decoration: none;
 	width: 20% ;
 	float: left;
+}
+#exit:hover {
+	background-color: #005492;
 }
