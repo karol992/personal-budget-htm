@@ -53,3 +53,15 @@ div {
 	background-color: silver; /* test */
 	min-height: 470px; /* test */
 }
+#registration {
+	width: 780px;
+	margin: 10px;
+	background-color: #444;
+}
+#regi-login-box {
+	width: 300px;
+	padding: 10px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: auto;
+}
