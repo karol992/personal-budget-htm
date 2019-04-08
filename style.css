@@ -47,6 +47,10 @@ div {
 	text-transform: uppercase;
 	background-color: #E7AE00;
 }
+#login-banner {
+	text-transform: uppercase;
+	background-color: #E76200;
+}
 .window {
 	width: 100%;
 	float: left;
