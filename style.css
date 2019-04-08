@@ -2,7 +2,7 @@ body {
 	background-color: #303030;
 	color: #ffffff;
 	font-family: 'Lato', sans-serif;
-	font-size: 35px;
+	font-size: 50px;
 }
 a {
 		color: #ffffff;
@@ -11,14 +11,14 @@ div {
 	border-radius: 5px;
 }
 #container {
-	width: 800px;
+	width: 900px;
 	margin-left: auto;
 	margin-right: auto;
-	background-color: gold; /* test */
+	/*background-color: gold; /* test */
 }
 .ribbon {
 	margin: 10px;
-	width: 780px;
+	width: 880px;
 	float: left;
 	text-align: center;
 	line-height: 200%;
@@ -34,7 +34,7 @@ div {
 	text-transform: uppercase;
 }
 #exit {
-	font-size: 20px;
+	font-size: 30px;
 	text-align: center;
 	text-decoration: none;
 	width: 20% ;
@@ -51,10 +51,10 @@ div {
 	width: 100%;
 	float: left;
 	background-color: silver; /* test */
-	min-height: 470px; /* test */
+	/*min-height: 470px; /* test */
 }
 #registration {
-	width: 780px;
+	width: 880px;
 	margin: 10px;
 	background-color: #444;
 }
@@ -64,4 +64,31 @@ div {
 	margin-left: auto;
 	margin-right: auto;
 	margin-top: auto;
+}
+input[type=text]#entrance, input[type=password]#entrance {
+	width: 300px;
+	background-color: #efefef;
+	border: 2px solid #ddd;
+	border-radius: 5px;
+	font-size: 20px;
+	padding: 10px;
+	box-sizing: border-box;
+	outline: none;
+	margin-top: 10px;
+}
+input[type=submit]#entrance {
+	width: 300px;
+	background-color: #60C060;
+	font-size:20px;
+	color: white;
+	padding: 15px 10px;
+	margin: 10px 0px 10px 0px;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	letter-spacing: 2px;
+	outline: none;
+}
+input[type=submit]#entrance:hover {
+	background-color: #40A040;
 }
