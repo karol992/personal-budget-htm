@@ -51,6 +51,10 @@ div {
 	text-transform: uppercase;
 	background-color: #E76200;
 }
+#menu-banner {
+	text-transform: uppercase;
+	background-color: #8b4726;
+}
 .window {
 	width: 100%;
 	float: left;
