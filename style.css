@@ -13,3 +13,11 @@ div {
 	margin-right: auto;
 	background-color: gold; /* test */
 }
+.ribbon {
+	margin: 10px;
+	width: 760px;
+	float: left;
+	text-align: center;
+	line-height: 200%;
+	background-color: #1c74b2;
+} 
