@@ -190,18 +190,19 @@ input[type=submit]#entrance:hover {
 .amount-date-paytype input[type=number] {
 	font-size: 160px;
 	height: 180px;
-	text-align: right;
+	text-align:right;
 	width: 820px;
 }
 .amount-date-paytype input[type=date] {
 	font-size:48px;
-	height: 90px;
-	text-align: right;
+	height: 100px;
 	width: 380px;
 }
 .amount-date-paytype select {
 	font-size:48px;
-	height: 90px;
-	text-align: right;
+	height: 100px;
 	width: 380px;
+}
+.amount-date-paytype select#category {
+	width:820px;
 }
