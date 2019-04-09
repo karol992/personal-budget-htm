@@ -143,17 +143,18 @@ input[type=submit]#entrance:hover {
 	height: 100%;
 	float:left;
 	font-size: 50px;
-	line-height: 135px;
+	line-height: 100px;
+	margin-top: 30px;
 	text-align: left;
 	text-transform: uppercase;
 }
 #balance-text {
+	margin-top: 0px;
 	line-height: 270px;
 }
 #settings-text {
+	margin-top: 0px;
 	line-height: 270px;
 	font-size: 40px;
 }
-#expense {
-	font-size: 18px;
-}
+
