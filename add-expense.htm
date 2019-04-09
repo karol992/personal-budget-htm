@@ -26,10 +26,31 @@
 		<div class="ribbon" id="expense-banner"  >
 			<span class="icon-minus" ></span> Dodawanie wydatku
 		</div>
-		<div class="window">
+		<div class="window" id="expense">
 			
-
-			
+			<div id="expense-properties-tile">
+				
+				<div class="amount-date-paytype">
+						<fieldset><legend>Kwota</legend><input type="number" min="0.00" step="0.01" name="amount"/></fieldset>
+				</div>
+	
+			</div>
+			<div id="expense-properties-tile">
+				
+				<div class="amount-date-paytype">
+						<fieldset><legend>Data</legend><input type="date" name="date"></fieldset>
+				</div>
+				<div class="amount-date-paytype">
+						<fieldset><legend>Płatność</legend>
+							<select>
+								<option value="g" selected>Gotówka</option>
+								<option value="d">Karta debetowa</option>
+								<option value="k">Karta kredytowa</option>
+							</select>
+						</fieldset>
+				</div>
+	
+			</div>
 			
 		</div>
 	</div>

@@ -10,6 +10,9 @@ a {
 div {
 	border-radius: 5px;
 }
+fieldset {
+	float: left;
+}
 #container {
 	width: 900px;
 	margin-left: auto;
@@ -161,4 +164,44 @@ input[type=submit]#entrance:hover {
 	line-height: 270px;
 	font-size: 40px;
 }
-
+#expense-properties-tile {
+	float: left;
+	margin: 10px;
+	width: 880px;
+	background-color: #444;
+}
+#expense {
+	font-size:18px;
+}
+.amount-date-paytype {
+	margin: 0px;
+	width: 880px;
+	line-height: 40px;
+}
+.amount-date-paytype div{
+	;
+}
+.amount-date-paytype fieldset{
+	margin: 10px;
+}
+.amount-date-paytype legend{
+	font-size: 50px;
+}
+.amount-date-paytype input[type=number] {
+	font-size: 160px;
+	height: 180px;
+	text-align: right;
+	width: 820px;
+}
+.amount-date-paytype input[type=date] {
+	font-size:48px;
+	height: 90px;
+	text-align: right;
+	width: 380px;
+}
+.amount-date-paytype select {
+	font-size:48px;
+	height: 90px;
+	text-align: right;
+	width: 380px;
+}
