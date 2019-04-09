@@ -21,21 +21,21 @@
 		<div class="ribbon" >
 			<div id="empty-logo"><br /></div>
 			<div id="logo">Budżet osobisty</div>
-			<a href="registration.htm"><div class="icon-power" Id="exit">Wyloguj</div></a>
+			<a href="menu.htm"><div class="icon-reply" Id="exit">Anuluj</div></a>
 		</div>
 		<div class="ribbon" id="expense-banner"  >
 			<span class="icon-minus" ></span> Dodawanie wydatku
 		</div>
 		<div class="window" id="expense">
 			
-			<div id="expense-properties-tile">
+			<div class="expense-properties-tile">
 				
 				<div class="amount-date-paytype">
 						<fieldset><legend>Kwota</legend><input type="number" min="0.00" step="0.01" name="amount"/></fieldset>
 				</div>
 	
 			</div>
-			<div id="expense-properties-tile">
+			<div class="expense-properties-tile">
 				
 				<div class="amount-date-paytype">
 						<fieldset><legend>Data</legend><input type="date" name="date"></fieldset>
@@ -51,7 +51,7 @@
 				</div>
 	
 			</div>
-			<div id="expense-properties-tile">
+			<div class="expense-properties-tile">
 				
 				<div class="amount-date-paytype">
 						<fieldset><legend>Kategoria</legend>
@@ -78,6 +78,20 @@
 				</div>
 	
 			</div>
+			
+			
+			<div id="expense-notes">
+				<fieldset>
+					<legend>Notatki</legend>
+					<div><textarea name="note" id="note"></textarea></div>
+				</fieldset>
+			</div>
+			<div id="expense-accept">
+				<input type="submit" value="Dodaj wydatek"/>
+				
+			</div>
+			
+			
 			
 		</div>
 	</div>

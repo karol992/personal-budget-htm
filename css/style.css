@@ -8,10 +8,15 @@ a {
 		color: #ffffff;
 }
 div {
-	border-radius: 5px;
+	border-radius: 20px;
 }
 fieldset {
 	float: left;
+	margin: 10px;
+}
+textarea {
+	resize:none;
+	font-size: 40px;
 }
 #container {
 	width: 900px;
@@ -164,45 +169,65 @@ input[type=submit]#entrance:hover {
 	line-height: 270px;
 	font-size: 40px;
 }
-#expense-properties-tile {
+.expense-properties-tile {
 	float: left;
 	margin: 10px;
 	width: 880px;
 	background-color: #444;
 }
 #expense {
-	font-size:18px;
+	font-size:40px;
 }
 .amount-date-paytype {
 	margin: 0px;
 	width: 880px;
 	line-height: 40px;
 }
-.amount-date-paytype div{
-	;
-}
-.amount-date-paytype fieldset{
-	margin: 10px;
-}
-.amount-date-paytype legend{
-	font-size: 50px;
-}
+
 .amount-date-paytype input[type=number] {
 	font-size: 160px;
 	height: 180px;
 	text-align:right;
-	width: 820px;
+	width: 790px;
 }
 .amount-date-paytype input[type=date] {
-	font-size:48px;
+	font-size:40px;
 	height: 100px;
-	width: 380px;
+	width: 350px;
 }
 .amount-date-paytype select {
-	font-size:48px;
-	height: 100px;
-	width: 380px;
+	font-size:40px;
+	height: 104px;
+	width: 350px;
 }
 .amount-date-paytype select#category {
-	width:820px;
+	width:790px;
+}
+#expense-notes {
+	float: left;
+	margin: 10px;
+	width: 580px;
+	height: 320px;
+	background-color: #444;
+}
+#expense-notes textarea{
+	float: left;
+	width: 490px;
+	height: 200px;
+}
+#expense-accept input[type=submit] {
+	color: #ffffff;
+	border-radius: 20px;
+	float: left;
+	margin: 10px;
+	width: 280px;
+	height: 320px;
+	background-color: #444;
+	font-size:60px;
+	cursor: pointer;
+	border: none;
+	white-space: normal;
+}
+#expense-accept input[type=submit]:hover {
+	background-color: #A04040;
 }
