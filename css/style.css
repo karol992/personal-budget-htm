@@ -362,7 +362,8 @@ input[type=submit]#entrance:hover {
 }
 .chart {
 	float: left;
-	width: 880px;
+	width: 840px;
 	margin: 10px;
-	background-color: silver;
+	padding: 20px;
+	background-color: white;;
 }
