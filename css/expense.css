@@ -1,0 +1,66 @@
+#expense-banner {
+	text-transform: uppercase;
+	background-color: #A04040;
+}
+#expense-window {
+	font-size:40px;
+}
+.expense-properties-tile {
+	float: left;
+	margin: 10px;
+	width: 880px;
+	background-color: #444;
+}
+.amount-date-paytype {
+	margin: 0px;
+	width: 880px;
+	line-height: 40px;
+}
+
+.amount-date-paytype input[type=number] {
+	font-size: 160px;
+	height: 180px;
+	text-align:right;
+	width: 790px;
+}
+.amount-date-paytype input[type=date] {
+	font-size:40px;
+	height: 100px;
+	width: 350px;
+}
+.amount-date-paytype select {
+	font-size:40px;
+	height: 104px;
+	width: 350px;
+}
+.amount-date-paytype select#category {
+	width:790px;
+}
+#expense-notes {
+	float: left;
+	margin: 10px;
+	width: 580px;
+	height: 320px;
+	background-color: #444;
+}
+#expense-notes textarea{
+	float: left;
+	width: 490px;
+	height: 200px;
+}
+#expense-accept input[type=submit] {
+	color: #ffffff;
+	border-radius: 20px;
+	float: left;
+	margin: 10px;
+	width: 280px;
+	height: 320px;
+	background-color: #444;
+	font-size:60px;
+	cursor: pointer;
+	border: none;
+	white-space: normal;
+}
+#expense-accept input[type=submit]:hover {
+	background-color: #A04040;
+}

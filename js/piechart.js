@@ -49,7 +49,7 @@ function drawChartPieChart(){
 			"position":"top",
 			"maxLines":"5",
 			"textStyle":{
-				"fontSize":"27"
+				"fontSize":"25"
 			}
 		}
 	};
