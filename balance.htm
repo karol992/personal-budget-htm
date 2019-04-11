@@ -1,0 +1,155 @@
+<!DOCTYPE HTML>
+<html lang="pl">
+<head>
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	
+	<title>Budżet Osobisty - bilans</title>
+	
+	<meta name="description" content="Budżet osobisty." />
+	<meta name="keywords" content="dochody, wydatki, bilans," />
+	
+	<link href='http://fonts.googleapis.com/css?family=Lato|Josefin+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" href="css/style.css" type="text/css" />
+	<link rel="stylesheet" href="css/balance.css" type="text/css" />
+	<link rel="stylesheet" href="css/fontello.css" type="text/css" />
+
+</head>
+
+<body >
+	
+	<div id="container">
+		<div class="ribbon" >
+			<div id="empty-logo"><br /></div>
+			<div id="logo">Budżet osobisty</div>
+			<a href="menu.htm"><div class="icon-reply" Id="exit">Powrót</div></a>
+		</div>
+		
+		<div class="ribbon" id="balance-banner"  >
+			<div class="balance-title"><span class="icon-chart-pie" >Bilans</span></div>
+			<div class="dropdown">
+			  <button class="drop-button">Zakres bilansu</button>
+			  <div class="dropdown-content">
+				<a href="#">Bieżący miesiąc</a>
+				<a href="#">Poprzedni miesiąc</a>
+				<a href="#">Bieżący rok</a>
+				<a href="#">Niestandardowy</a>
+			  </div>
+			</div>
+		</div>
+		
+		<div class="window">
+			<div class="balancetable">
+				<div class="balanceline" id="incomesribbon">
+					<div class="left">Dochody</div>
+					<div class="right">4913.35</div>
+				</div>
+				<div class="balanceline">
+					<div class="left">Wynagrodzenie</div>
+					<div class="right">4864.25</div>
+				</div>
+				<div class="balanceline">
+					<div class="left">Odsetki bankowe</div>
+					<div class="right">0.10</div>
+				</div>
+				<div class="balanceline">
+					<div class="left">Sprzedaż na allegro</div>
+					<div class="right">49.00</div>
+				</div>
+			</div>
+			
+			<div class="balancetable">
+				<div class="balanceline" id="expensesribbon">
+					<div class="left">Wydatki</div>
+					<div class="right">3386.53</div>
+				</div>
+				<div class="balanceline">
+					<div class="left">Jedzenie</div>
+					<div class="right">492.44</div>
+				</div>
+				<div class="balanceline">
+					<div class="left">Mieszkanie</div>
+					<div class="right">1450.00</div>
+				</div>
+				<div class="balanceline">
+					<div class="left">Transport</div>
+					<div class="right">153.87</div>
+				</div>
+				<div class="balanceline">
+					<div class="left">Telekomunikacja</div>
+					<div class="right">142.79</div>
+				</div>
+				<div class="balanceline">
+					<div class="left">Opieka zdrowotna</div>
+					<div class="right">0.00</div>
+				</div>
+				<div class="balanceline">
+					<div class="left">Ubranie</div>
+					<div class="right">0.00</div>
+				</div>
+				<div class="balanceline">
+					<div class="left">Higiena</div>
+					<div class="right">72.58</div>
+				</div>
+				<div class="balanceline">
+					<div class="left">Dzieci</div>
+					<div class="right">0.00</div>
+				</div>
+				<div class="balanceline">
+					<div class="left">Rozrywka</div>
+					<div class="right">135.86</div>
+				</div>
+				<div class="balanceline">
+					<div class="left">Wycieczka</div>
+					<div class="right">0.00</div>
+				</div>
+				<div class="balanceline">
+					<div class="left">Szkolenia</div>
+					<div class="right">0.00</div>
+				</div>
+				<div class="balanceline">
+					<div class="left">Książki</div>
+					<div class="right">191.88</div>
+				</div>
+				<div class="balanceline">
+					<div class="left">Oszczędności</div>
+					<div class="right">0.00</div>
+				</div>
+				<div class="balanceline">
+					<div class="left">Na emeryturę</div>
+					<div class="right">0.00</div>
+				</div>
+				<div class="balanceline">
+					<div class="left">Spłata długów</div>
+					<div class="right">0.00</div>
+				</div>
+				<div class="balanceline">
+					<div class="left">Darowizna</div>
+					<div class="right">94.35</div>
+				</div>
+				<div class="balanceline">
+					<div class="left">Inne wydatki</div>
+					<div class="right">652.76</div>
+				</div>
+			</div>
+		
+			<div class="ribbon" id="balancepart" >
+				<div class="balanceline" id="balance-sum">
+					<div class="left">Bilans</div>
+					<div class="right">1526.82</div>
+				</div>
+			</div>
+			
+			<div class="chart">
+				<div id="piechart"></div>
+				<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+				<script src="http://www.google.com/jsapi"></script>
+				<script type="text/javascript" src="js/piechart.js"></script>
+			</div>
+			
+		</div>
+		
+	</div>
+
+</body>
+</html>
