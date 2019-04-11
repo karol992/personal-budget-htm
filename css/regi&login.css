@@ -18,7 +18,7 @@
 	margin-right: auto;
 	margin-top: auto;
 }
-input[type=text]#entrance, input[type=password]#entrance {
+input[type=text], input[type=password] {
 	width: 300px;
 	background-color: #efefef;
 	border: 2px solid #ddd;
@@ -29,7 +29,7 @@ input[type=text]#entrance, input[type=password]#entrance {
 	outline: none;
 	margin-top: 10px;
 }
-input[type=submit]#entrance {
+input[type=submit] {
 	width: 300px;
 	background-color: #60C060;
 	font-size:20px;
@@ -42,6 +42,6 @@ input[type=submit]#entrance {
 	letter-spacing: 2px;
 	outline: none;
 }
-input[type=submit]#entrance:hover {
+input[type=submit]:hover {
 	background-color: #40A040;
 }
