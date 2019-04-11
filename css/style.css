@@ -236,14 +236,9 @@ input[type=submit]#entrance:hover {
 	background-color: #A04040;
 }
 .balance-info {
-	text-transform: none;
 	float: left;
 	display: inline-block;
 	width: 50%;
-	/*background-color: gold;*/
-}
-#balance-sum {
-	color: green;
 }
 .drop-button {
   width: 100%;
@@ -318,4 +313,56 @@ input[type=submit]#entrance:hover {
 }
 .dropdown2:hover .dropdown-content2 {
   display: block;
+}
+.incomespart {
+	float: left;
+	width: 880px;
+	margin: 10px;
+	background-color: silver;
+}
+.expensespart {
+	float: left;
+	width: 880px;
+	margin: 10px;
+	background-color: silver;
+}
+#incomesribbon {
+	background-color: #3e8e41;
+	width: 880px;
+	float: left;
+	color: white;
+}
+#expensesribbon {
+	background-color: #A04040;
+	width: 880px;
+	float: left;
+	color: white;
+}
+.balanceline {
+	font-size: 50px;
+	color: black;
+}
+.balanceline .left {
+	float: left;
+	padding: 10px;
+	width: 570px;
+	text-align: left;
+}
+.balanceline .right {
+	float: left;
+	padding: 10px;
+	width: 270px;
+	text-align: right;
+}
+#balancepart {
+	background-color: #3e8e41;
+}
+#balance-sum {
+	color: white;
+}
+.chart {
+	float: left;
+	width: 880px;
+	margin: 10px;
+	background-color: silver;
 }
