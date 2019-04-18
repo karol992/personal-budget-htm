@@ -7,6 +7,8 @@ body {
 h1 {
 		font-weight: 700;
 }
+
+/* <header> stylization */
 .ribbon {
 	background-color: #7F9949;
 	min-height: 70px;
@@ -23,14 +25,13 @@ h1 {
 	border-radius: 10px;
 }
 
-.form-box
-{
+/* login.htm <main> stylization */
+.form-box {
 	padding: 50px;
 	margin-left: auto;
 	margin-right: auto;
 	max-width: 440px;
 }
-
 .input-container {
 	display: flex;
 	width: 100%;
