@@ -58,11 +58,11 @@ h1 {
 	width: 100%;
 }
 .icon {
-	padding-top: 18px;
-	text-align: center;
 	background: #7F9949;
-	color: white;
 	min-width: 50px;
-	text-align: center;
 	border-radius: 5px 0px 0px 5px;
+}
+.single-icon {
+	padding: 18px 7px 7px 7px;
+	color: white;
 }
