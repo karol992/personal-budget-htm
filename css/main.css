@@ -98,10 +98,15 @@ h1 {
 	border: 2px solid #7F9949;
 	color: rgba(0, 0, 0, 0.5);
 	text-align: center;
+	margin-top: 5px;
 }
 .nav-link {
 	color: rgba(0, 0, 0, 0.5);
 }
 .nav-link:hover {
 	color: rgba(0, 0, 0, 0.7);
+}
+.bg-del:hover {
+	background-color: #dc3545;
+	border: 2px solid #6e1a22;
 }
