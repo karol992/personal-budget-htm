@@ -30,7 +30,7 @@ h1 {
 	border: 2px solid #6973FA;
 }
 
-/* login.htm <main> stylization */
+/* login.htm&registration.htm <main> stylization */
 .form-box {
 	padding: 50px;
 	margin-left: auto;
@@ -90,4 +90,18 @@ h1 {
 	border: 2px solid #6973FA;
 	color: #6973FA;
 }
-
+/* settings.htm */
+.settings-group {
+	padding: 10px;
+	background-color: #BBCC99;
+	border-radius: 10px;
+	border: 2px solid #7F9949;
+	color: rgba(0, 0, 0, 0.5);
+	text-align: center;
+}
+.nav-link {
+	color: rgba(0, 0, 0, 0.5);
+}
+.nav-link:hover {
+	color: rgba(0, 0, 0, 0.7);
+}
