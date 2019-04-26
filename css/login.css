@@ -19,3 +19,37 @@
 	outline: none;
 	border-radius: 0px 5px 5px 0px; 
 }
+.btn {
+	background-color: #7F9949;
+	font-size: 20px;
+	color: white;
+	padding: 10px;
+	border: none;
+	cursor: pointer;
+	width: 100%;
+	border-radius: 0px;
+}
+.btn:hover {
+	background-color: #99AACC;
+}
+.bg-icon {
+	background: #7F9949;
+	min-width: 50px;
+	border-radius: 5px 0px 0px 5px;
+}
+.submit-icon {
+	padding: 17px 0px 0px 0px;
+	min-width: 50px;
+}
+.submit-container {
+	display: flex;
+	width: 100%;
+	margin-bottom: 15px;
+	border: 2px solid #7F9949;
+	border-radius: 5px;
+	background-color: white;
+}
+.submit-container:hover {
+	border: 2px solid #6973FA;
+	color: #6973FA;
+}
