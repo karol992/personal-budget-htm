@@ -1,21 +1,20 @@
 .container {
 	border-radius: 10px;
 	border: 2px solid #7F9949;
-	margin-top: 5px;
+	margin-top: 20px;
+	margin-bottom: 20px;
 	width: 100%;
 	display: table;
 }
-input[type=number] {
-	background-color: red;
+
+input,option,select,input[type=textarea] {
+	padding-left: 10px;
 	width: 100%;
-}
-input[type=number]::-webkit-inner-spin-button {
-	opacity: 1;
+	font-size: calc(10px +  2vmax);
 }
 
-input[type=date] {
-	background-color: gold;
-	width: 100%;
+input[type=number]::-webkit-inner-spin-button {
+	opacity: 1;
 }
 input[type=date]::-webkit-inner-spin-button {
 	opacity: 1;
@@ -24,8 +23,26 @@ input[type=date]::-webkit-calendar-picker-indicator {
 	opacity: 1;
 }
 
-.test {
-	border: 2px solid #7F9949;
+.income_section{
 	display: inline-block;
 	height: 20vmin;
+	min-height: 90px;
+	padding: 5px;
+}
+.income_btn {
+	padding: 5px;
+	display: inline-block;
+	height: 10vmin;
+	min-height: 60px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+.btn {
+	height: 100%;
+	width: 100%;
+	font-size: 16px;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	line-height: 100%;
 }
