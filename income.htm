@@ -63,7 +63,39 @@
 		</nav>
 	</header>
 	
-	income
+	<main>
+		<!-- Income adding -->
+		<form class="container offset-xl-3 offset-lg-2 offset-md-1 offset-sm-2 offset-1 col-xl-6 col-lg-8 col-md-10 col-sm-8 col-10" action="" method="post" enctype="multipart/form-data">
+			<!-- Amount of income -->
+			<div>
+				<label for="name">Kwota dochodu: </label>
+				<input type="number" name="price" step="0.01" value="2000.00" min="0.01" required>
+			</div>
+			<!-- Date of income -->
+			<div>
+				<label for="date">Data: </label>
+				<input type="date" name="date">
+			</div>
+			<!-- Category of income -->
+			<div>
+				<div>Kategoria: </div>
+				<div><label><input type="radio" value="1" name="category" checked> Wynagrodzenie </label></div>
+				<div><label><input type="radio" value="2" name="category"> Odsetki bankowe </label></div>
+				<div><label><input type="radio" value="2" name="category"> Sprzedaż na allegro </label></div>
+				<div><label><input type="radio" value="2" name="category"> Inne </label></div>
+			</div>
+			<!-- Income note -->
+			<div>
+				<label for="note">Notatki: </label>
+				<input type="textarea" id="note" placeholder="Opcjonalnie..." onfocus="this.placeholder=''" onblur="this.placeholder='Opcjonalnie...'">
+			</div>
+			<!-- Income saving -->
+			<div>
+				<button type="submit" value="Submit">Dodaj</button>
+				<button type="reset" value="Reset">Anuluj</button>
+			</div>
+		</form>
+	</main>
 	
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 	
