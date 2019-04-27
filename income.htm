@@ -68,18 +68,18 @@
 		<form class="container offset-xl-2 offset-lg-1 offset-md-1 offset-sm-2 offset-1 col-xl-8 col-lg-10 col-md-10 col-sm-8 col-10" action="" method="post" enctype="multipart/form-data">
 			<!-- Amount of income -->
 			<div class="income_section col-12 col-md-6">
-				<div><label for="name">Kwota: </label></div>
-				<div><input type="number" name="price" step="0.01" value="2000.00" min="0.01" required></div>
+				<div><label for="income_value">Kwota: </label></div>
+				<div><input type="number" name="income_value" step="0.01" value="2000.00" min="0.01" required></div>
 			</div>
 			<!-- Date of income -->
 			<div class="income_section col-12 col-md-6">
-				<div><label for="date">Data: </label></div>
-				<div><input type="date" name="date" value="2019-01-31"></div>
+				<div><label for="income_date">Data: </label></div>
+				<div><input type="date" name="income_date" value="2019-01-31"></div>
 			</div>
 			<!-- Category of income -->
 			<div class="income_section col-12 col-md-6">
 				<div>Kategoria: </div>
-				<select name="category">
+				<select name="income_category">
 					<option value="1" selected> Wynagrodzenie </option>
 					<option value="2"> Odsetki bankowe </option>
 					<option value="3"> Sprzedaż na allegro </option>
@@ -88,8 +88,8 @@
 			</div>
 			<!-- Income note -->
 			<div class="income_section col-12 col-md-6">
-				<label for="note">Notatki: </label>
-				<input type="textarea" id="note" placeholder="Opcjonalnie..." onfocus="this.placeholder=''" onblur="this.placeholder='Opcjonalnie...'">
+				<label for="income_note">Notatki: </label>
+				<input type="textarea" id="income_note" placeholder="Opcjonalnie..." onfocus="this.placeholder=''" onblur="this.placeholder='Opcjonalnie...'">
 			</div>
 			<!-- Income saving -->
 			<div class="income_btn offset-4 offset-md-6 col-4 col-md-3">
