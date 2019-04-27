@@ -12,11 +12,12 @@
 	<meta http-equiv="X-Ua-Compatible" content="IE=edge">
 	
 	<link rel="stylesheet" href="css/bootstrap.min.css">
-	<link rel="stylesheet" href="css/main.css">
-	<link rel="stylesheet" href="css/income.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&amp;subset=latin-ext" rel="stylesheet">
+	
+	<link rel="stylesheet" href="css/main.css">
+	<link rel="stylesheet" href="css/income.css">
 	
 	<!--[if lt IE 9]>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -43,8 +44,8 @@
 					<li class="nav-item">
 						<a class="nav-link" href="menu.htm"><span class="fa fa-home fa-fw"></span>Strona główna </a>
 					</li>
-					<li class="nav-item">
-						<a class="nav-link" href="income.htm"><span class="fa fa-money fa-fw"></span>Dodaj przychód </a>
+					<li class="nav-item-active">
+						<div class="nav-link"><span class="fa fa-money fa-fw"></span>Dodaj przychód </div>
 					</li>
 					<li class="nav-item">
 						<a class="nav-link" href="expense.htm"><span class="fa fa-shopping-cart fa-fw"></span>Dodaj wydatek </a>
@@ -67,14 +68,14 @@
 		<!-- Income adding -->
 		<form class="container offset-xl-3 offset-lg-2 offset-md-1 offset-sm-2 offset-1 col-xl-6 col-lg-8 col-md-10 col-sm-8 col-10" action="" method="post" enctype="multipart/form-data">
 			<!-- Amount of income -->
-			<div>
-				<label for="name">Kwota dochodu: </label>
-				<input type="number" name="price" step="0.01" value="2000.00" min="0.01" required>
+			<div class="test col-6">
+				<div><label for="name">Kwota dochodu: </label></div>
+				<div><input type="number" name="price" step="0.01" value="2000.00" min="0.01" required></div>
 			</div>
 			<!-- Date of income -->
-			<div>
-				<label for="date">Data: </label>
-				<input type="date" name="date">
+			<div class="test col-6">
+				<div><label for="date">Data: </label></div>
+				<div><input type="date" name="date"></div>
 			</div>
 			<!-- Category of income -->
 			<div>

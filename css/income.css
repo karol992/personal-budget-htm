@@ -1,6 +1,31 @@
 .container {
-	padding: 10px;
 	border-radius: 10px;
 	border: 2px solid #7F9949;
 	margin-top: 5px;
+	width: 100%;
+	display: table;
+}
+input[type=number] {
+	background-color: red;
+	width: 100%;
+}
+input[type=number]::-webkit-inner-spin-button {
+	opacity: 1;
+}
+
+input[type=date] {
+	background-color: gold;
+	width: 100%;
+}
+input[type=date]::-webkit-inner-spin-button {
+	opacity: 1;
+}
+input[type=date]::-webkit-calendar-picker-indicator {
+	opacity: 1;
+}
+
+.test {
+	border: 2px solid #7F9949;
+	display: inline-block;
+	height: 20vmin;
 }
