@@ -2,28 +2,39 @@ body {
 	background-color: #FFFBD9;
 	color: #7F9949;
     font-family: 'Open Sans', sans-serif;
-    font-size: 16px;
+    font-size: calc(8px + 3vmin);
+	/*font-size: 10px;*/
 }
 h1 {
-		font-weight: 700;
+	font-size: calc(10px + 5vw);
+	font-weight: 700;
 }
-
 /* <header> stylization */
 .ribbon {
 	background-color: #7F9949;
 	min-height: 70px;
 }
 .logo {
-	text-align: center;
 	padding: 10px;
+	text-align: center;
 }
 .nav-item {
 	background-color: #BBCC99;
 	margin: 5px;
-	min-width: 170px;
+	min-width: 145px;
 	text-align: center;
 	border-radius: 10px;
 	border: 2px solid #7F9949;
+	font-size: 16px;
+}
+.nav-item-active {
+	background-color: #B399CC;
+	margin: 5px;
+	min-width: 145px;
+	text-align: center;
+	border-radius: 10px;
+	border: 2px solid #7F9949;
+	font-size: 16px;
 }
 .nav-item:hover {
 	background-color: #99AACC;
@@ -33,5 +44,3 @@ h1 {
 	padding: 18px 7px 7px 7px;
 	color: white;
 }
-
-
