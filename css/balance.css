@@ -9,7 +9,12 @@
 .btn-balance {
 	background-color: #7F9949;
 }
+.dropdown-item {
+	padding-left: 10px;
+}
 .dropdown-item:hover {
-	background-color: #BBCC99;
 	background-color: #99AACC;
 }
+
+/* Modal */
+
