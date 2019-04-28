@@ -1,0 +1,15 @@
+.container {
+	border-radius: 10px;
+	border: 2px solid #7F9949;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	width: 100%;
+	display: table;
+}
+.btn-balance {
+	background-color: #7F9949;
+}
+.dropdown-item:hover {
+	background-color: #BBCC99;
+	background-color: #99AACC;
+}

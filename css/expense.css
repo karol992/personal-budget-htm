@@ -6,26 +6,9 @@
 	width: 100%;
 	display: table;
 }
-
-input,option,select,input[type=textarea] {
-	padding-left: 10px;
-	width: 100%;
-	font-size: calc(10px +  2vmax);
-}
-
-input[type=number]::-webkit-inner-spin-button {
-	opacity: 1;
-}
-input[type=date]::-webkit-inner-spin-button {
-	opacity: 1;
-}
-input[type=date]::-webkit-calendar-picker-indicator {
-	opacity: 1;
-}
-
 .expense_section{
 	display: inline-block;
-	height: 20vmin;
+	height: 15vmin;
 	min-height: 90px;
 	padding: 5px;
 }
@@ -44,4 +27,19 @@ input[type=date]::-webkit-calendar-picker-indicator {
 	padding-top: 0px;
 	padding-bottom: 0px;
 	line-height: 100%;
+}
+
+input,option,select,input[type=textarea] {
+	padding-left: 10px;
+	width: 100%;
+    font-size: calc(12px + 2vmin);
+}
+input[type=number]::-webkit-inner-spin-button {
+	opacity: 1;
+}
+input[type=date]::-webkit-inner-spin-button {
+	opacity: 1;
+}
+input[type=date]::-webkit-calendar-picker-indicator {
+	opacity: 1;
 }
