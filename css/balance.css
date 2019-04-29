@@ -1,0 +1,78 @@
+.row {
+	;
+}
+.con {
+	border-radius: 10px;
+	border: 2px solid #7F9949;
+	padding: 10px;
+	margin-bottom: 10px;
+}
+.margin20 {
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+.btn-balance {
+	background-color: #7F9949;
+	color: #FFFBD9;
+}
+.dropdown-item {
+	padding-left: 10px;
+}
+.dropdown-item:hover {
+	background-color: #99AACC;
+}
+.inB {
+	display: inline-block;
+}
+
+input,option,select,input[type=textarea] {
+	padding-left: 10px;
+	width: 100%;
+    font-size: calc(12px + 2vmin);
+}
+input[type=number]::-webkit-inner-spin-button {
+	opacity: 1;
+}
+input[type=date]::-webkit-inner-spin-button {
+	opacity: 1;
+}
+input[type=date]::-webkit-calendar-picker-indicator {
+	opacity: 1;
+	color: #7F9949;
+}
+
+.brd {
+	/*border: 2px solid #7F9949;*/
+}
+.b_line {
+	font-size: 16px;
+	color: black;
+	margin: 5px 0px 5px 0px;
+}
+/* Balance left cell*/
+.blcell {
+	padding: 5px;
+	border: 1px solid #7F9949;
+	border-right: none;
+	background-color: white;
+}
+/* Balance right cell*/
+.brcell {
+	text-align: right;
+	padding: 5px;
+	border: 1px solid #7F9949;
+	border-left: none;
+	border-right: none;
+	background-color: white;
+}
+.btn_list {
+	border: 1px solid #7F9949;
+	padding: 0px;
+	border-radius: 0px;
+	background-color: #BBCC99;
+}
+.b_chart {
+	border: 1px solid #7F9949;
+	margin-top: 25px;
+	margin-bottom: 25px;
+}

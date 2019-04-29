@@ -34,7 +34,7 @@
 		<nav class="navbar navbar-light navbar-expand-lg ribbon">
 			<!-- Navigation Switch -->
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mainmenu" aria-controls="mainmenu" aria-expanded="false" aria-label="Przełącznik nawigacji">
-				<span class="navbar-toggler-icon"></span>
+				<div><span class="navbar-toggler-icon"></span> MENU</div>
 			</button>
 			<!-- Menu Icons -->
 			<div class="collapse navbar-collapse  justify-content-center" id="mainmenu">
@@ -63,12 +63,198 @@
 	</header>
 	
 	<main>
-		balance
+		
+		<section>
+			
+			<div class="container">
+			
+				<div class="dropdown">
+					 <button class="con margin20 offset-lg-10 offset-md-9 offset-sm-8 offset-7 col-lg-2 col-md-3 col-sm-4 col-5 btn btn-balance dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Zakres
+					</button>
+					<div class="dropdown-menu col-lg-2 col-md-3 col-sm-4 col-5" aria-labelledby="dropdownMenu2">
+						<button class="dropdown-item" type="button">Bieżący miesiąc</button>
+						<button class="dropdown-item" type="button">Poprzedni miesiąc</button>
+						<button class="dropdown-item" type="button">Bieżący rok</button>
+						<button class="dropdown-item" type="button" href="#dateModal" data-toggle="modal" data-target="#dateModal">
+							Niestandardowy
+						</button>			
+					</div>
+				</div>
+			
+				<div class="row">
+					
+					
+					<div class="brd col-md-6" id="income_table">
+							Przychody
+						<div class="b_line row shadow">
+							<div class="blcell col-7">Wynagrodzenie</div>
+							<div class="brcell col-4">10009.00</div>
+							<button class="btn btn_list col-1"><span class="fa fa-file-text-o"></span></button>
+						</div>
+						<div class="b_line row shadow">
+							<div class="blcell col-7">Odsetki bankowe</div>
+							<div class="brcell col-4">0.18</div>
+							<button class="btn btn_list col-1"><span class="fa fa-file-text-o"></span></button>
+						</div>
+						<div class="b_line row shadow">
+							<div class="blcell col-7">Sprzedaż na allegro</div>
+							<div class="brcell col-4">50.00</div>
+							<button class="btn btn_list col-1"><span class="fa fa-file-text-o"></span></button>
+						</div>
+						<div class="b_line row shadow">
+							<div class="blcell col-7">Inne</div>
+							<div class="brcell col-4">0.00</div>
+							<button class="btn btn_list col-1"><span class="fa fa-file-text-o"></span></button>
+						</div>
+						<div class="b_chart shadow">
+							<div id="chartContainer" style="height: 350px; max-width: 820px; margin: 0px auto;"></div>
+						</div>
+					</div>
+					
+					<div class="brd col-md-6">
+						Wydatki:
+						<div class="b_line row shadow">
+							<div class="blcell col-7">Jedzenie</div>
+							<div class="brcell col-4">623.12</div>
+							<button class="btn btn_list col-1"><span class="fa fa-file-text-o"></span></button>
+						</div>
+						<div class="b_line row shadow">
+							<div class="blcell col-7">Mieszkanie</div>
+							<div class="brcell col-4">1450.00</div>
+							<button class="btn btn_list col-1"><span class="fa fa-file-text-o"></span></button>
+						</div>
+						<div class="b_line row shadow">
+							<div class="blcell col-7">Transport</div>
+							<div class="brcell col-4">412.35</div>
+							<button class="btn btn_list col-1"><span class="fa fa-file-text-o"></span></button>
+						</div>
+						<div class="b_line row shadow">
+							<div class="blcell col-7">Telekomunikacja</div>
+							<div class="brcell col-4">140.00</div>
+							<button class="btn btn_list col-1"><span class="fa fa-file-text-o"></span></button>
+						</div>
+						<div class="b_line row shadow">
+							<div class="blcell col-7">Opieka zdrowotna</div>
+							<div class="brcell col-4">20.00</div>
+							<button class="btn btn_list col-1"><span class="fa fa-file-text-o"></span></button>
+						</div>
+						<div class="b_line row shadow">
+							<div class="blcell col-7">Ubranie</div>
+							<div class="brcell col-4">120.00</div>
+							<button class="btn btn_list col-1"><span class="fa fa-file-text-o"></span></button>
+						</div>
+						<div class="b_line row shadow">
+							<div class="blcell col-7">Higiena</div>
+							<div class="brcell col-4">29.80</div>
+							<button class="btn btn_list col-1"><span class="fa fa-file-text-o"></span></button>
+						</div>
+						<div class="b_line row shadow">
+							<div class="blcell col-7">Dzieci</div>
+							<div class="brcell col-4">0.00</div>
+							<button class="btn btn_list col-1"><span class="fa fa-file-text-o"></span></button>
+						</div>
+						<div class="b_line row shadow">
+							<div class="blcell col-7">Rozrywka</div>
+							<div class="brcell col-4">151.00</div>
+							<button class="btn btn_list col-1"><span class="fa fa-file-text-o"></span></button>
+						</div>
+						<div class="b_line row shadow">
+							<div class="blcell col-7">Wycieczka</div>
+							<div class="brcell col-4">650.00</div>
+							<button class="btn btn_list col-1"><span class="fa fa-file-text-o"></span></button>
+						</div>
+						<div class="b_line row shadow">
+							<div class="blcell col-7">Szkolenia</div>
+							<div class="brcell col-4">0.00</div>
+							<button class="btn btn_list col-1"><span class="fa fa-file-text-o"></span></button>
+						</div>
+						<div class="b_line row shadow">
+							<div class="blcell col-7">Książki</div>
+							<div class="brcell col-4">99.00</div>
+							<button class="btn btn_list col-1"><span class="fa fa-file-text-o"></span></button>
+						</div>
+						<div class="b_line row shadow">
+							<div class="blcell col-7">Oszczędności</div>
+							<div class="brcell col-4">0.00</div>
+							<button class="btn btn_list col-1"><span class="fa fa-file-text-o"></span></button>
+						</div>
+						<div class="b_line row shadow">
+							<div class="blcell col-7">Emertytura</div>
+							<div class="brcell col-4">0.00</div>
+							<button class="btn btn_list col-1"><span class="fa fa-file-text-o"></span></button>
+						</div>
+						<div class="b_line row shadow">
+							<div class="blcell col-7">Spłata długów</div>
+							<div class="brcell col-4">0.00</div>
+							<button class="btn btn_list col-1"><span class="fa fa-file-text-o"></span></button>
+						</div>
+						<div class="b_line row shadow">
+							<div class="blcell col-7">Darowizna</div>
+							<div class="brcell col-4">55.00</div>
+							<button class="btn btn_list col-1"><span class="fa fa-file-text-o"></span></button>
+						</div>
+						<div class="b_line row shadow">
+							<div class="blcell col-7">Inne wydatki</div>
+							<div class="brcell col-4">44.00</div>
+							<button class="btn btn_list col-1"><span class="fa fa-file-text-o"></span></button>
+						</div>
+						
+					</div>
+					 
+					
+				</div>
+			
+			</div>
+			
+		</section>
+		
 	</main>
+	
+	
+	
+	
+	<!-- dateModal -->
+	<div class="modal fade" id="dateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<form class="modal-content" action="" method="post" enctype="multipart/form-data">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Niestandardowy okres</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<section>
+				
+				
+						<div class="container">
+							<div class="row">
+								<label class="offset-1 col-2" for="income_date">Od: </label>
+								<input class="col-7" type="date" name="income_date" value="2019-01-01">
+							</div>
+							<div class="row">
+								<label class="offset-1 col-2" for="income_date">Do: </label>
+								<input class="col-7" type="date" name="income_date" value="2019-01-31">
+							</div>
+						</div>
+					
+					
+					</section>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-balance" data-dismiss="modal" value="Submit">OK</button>
+				</div>
+			</form>
+		</div>
+	</div>
 	
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+	
+	<script src="js/jquery.canvasjs.min.js"></script>
+	<script src="js/balance.pie.chart.js"></script>
 	
 </body>
 </html>
