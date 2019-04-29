@@ -1,5 +1,8 @@
-.row {
-	;
+.period_ribbon {
+	background-color: #BBCC99;
+	color: #FFFBD9;
+	text-shadow: -1px 0 #7F9949, 0 1px #7F9949, 1px 0 #7F9949, 0 -1px #7F9949;
+	text-align: center;
 }
 .con {
 	border-radius: 10px;
@@ -42,7 +45,7 @@ input[type=date]::-webkit-calendar-picker-indicator {
 }
 
 .brd {
-	/*border: 2px solid #7F9949;*/
+	border: 2px solid #7F9949;
 }
 .b_line {
 	font-size: 16px;
@@ -62,11 +65,11 @@ input[type=date]::-webkit-calendar-picker-indicator {
 	padding: 5px;
 	border: 1px solid #7F9949;
 	border-left: none;
-	border-right: none;
 	background-color: white;
 }
 .btn_list {
 	border: 1px solid #7F9949;
+	border-left: none;
 	padding: 0px;
 	border-radius: 0px;
 	background-color: #BBCC99;
@@ -75,4 +78,14 @@ input[type=date]::-webkit-calendar-picker-indicator {
 	border: 1px solid #7F9949;
 	margin-top: 25px;
 	margin-bottom: 25px;
+}
+.b_sum {
+	font-size: 28px;
+}
+.b_motivation {
+	line-height: 42px;
+	text-align: center;
+	padding: 5px;
+	border: 1px solid #7F9949;
+	background-color: white;
 }
