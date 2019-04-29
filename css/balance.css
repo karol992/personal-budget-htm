@@ -31,7 +31,7 @@
 input,option,select,input[type=textarea] {
 	padding-left: 10px;
 	width: 100%;
-    font-size: calc(12px + 2vmin);
+	font-size: 16px;
 }
 input[type=number]::-webkit-inner-spin-button {
 	opacity: 1;
@@ -87,5 +87,21 @@ input[type=date]::-webkit-calendar-picker-indicator {
 	text-align: center;
 	padding: 5px;
 	border: 1px solid #7F9949;
+	background-color: white;
+}
+.modal_line {
+	font-size: 16px;
+	color: black;
+	margin-bottom: 10px;
+	border: 1px solid #7F9949;
+	border-left: none;
+	border-top: none;
+}
+.modal_cell {
+	padding: 5px;
+	border: 1px solid #7F9949;
+	border-right: none;
+	border-bottom: none;
+	border-right: none;
 	background-color: white;
 }
