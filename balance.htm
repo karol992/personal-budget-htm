@@ -16,6 +16,7 @@
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&amp;subset=latin-ext" rel="stylesheet">
 	<link rel="stylesheet" href="css/main.css">
 	<link rel="stylesheet" href="css/balance.css">
+	<link rel="stylesheet" href="css/piechart.css">
 	
 	<!--[if lt IE 9]>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -98,166 +99,178 @@
 				<div class="row">
 					
 					
-					<div class="col-md-6" id="income_table">
+					<div class="col-md-6">
 							Przychody
-						<div class="b_line row shadow">
-							<div class="blcell col-7">Wynagrodzenie</div>
-							<div class="brcell col-4">5642.00</div>
-							<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-								<span class="fa fa-file-text-o"></span>
+						<div id="income_table">
+							<div class="b_line row shadow">
+								<div class="blcell col-7">Wynagrodzenie</div>
+								<div class="brcell col-4">5642.00</div>
+								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
+									<span class="fa fa-file-text-o"></span>
+								</button>
+							</div>
+							<div class="b_line row shadow">
+								<div class="blcell col-7">Odsetki bankowe</div>
+								<div class="brcell col-4">0.18</div>
+								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
+									<span class="fa fa-file-text-o"></span>
+								</button>
+							</div>
+							<div class="b_line row shadow">
+								<div class="blcell col-7">Sprzedaż na allegro</div>
+								<div class="brcell col-4">50.00</div>
+								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
+									<span class="fa fa-file-text-o"></span>
+								</button>
+							</div>
+							<div class="b_line row shadow">
+								<div class="blcell col-7">Inne</div>
+								<div class="brcell col-4">0.00</div>
+								<button class="btn btn_list col-1" href="#legendModal" data-toggle="modal" data-target="#legendModal">
+									<span class="fa fa-file-text-o"></span>
+								</button>
+							</div>
+						</div>
+						
+						Wykres wydatków
+						<div class="b_border shadow">
+							<div class="ratioparent">
+								<div id="chartdiv" class="ratiochild"></div>
+							</div>
+						</div>
+						<div>
+							<button class="btn b_border col-12" id="legend_btn" href="#legendModal" data-toggle="modal" data-target="#legendModal">
+								Legenda
 							</button>
 						</div>
-						<div class="b_line row shadow">
-							<div class="blcell col-7">Odsetki bankowe</div>
-							<div class="brcell col-4">0.18</div>
-							<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-								<span class="fa fa-file-text-o"></span>
-							</button>
-						</div>
-						<div class="b_line row shadow">
-							<div class="blcell col-7">Sprzedaż na allegro</div>
-							<div class="brcell col-4">50.00</div>
-							<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-								<span class="fa fa-file-text-o"></span>
-							</button>
-						</div>
-						<div class="b_line row shadow">
-							<div class="blcell col-7">Inne</div>
-							<div class="brcell col-4">0.00</div>
-							<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-								<span class="fa fa-file-text-o"></span>
-							</button>
-						</div>
-						<div class="b_chart shadow">
-							<div id="chartContainer" style="height: 350px; max-width: 820px; margin: 0px auto;"></div>
-						</div>
+							
 					</div>
 					
 					<div class="col-md-6">
 						Wydatki:
-						<div class="b_line row shadow">
-							<div class="blcell col-7">Jedzenie</div>
-							<div class="brcell col-4">623.12</div>
-							<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-								<span class="fa fa-file-text-o"></span>
-							</button>
+						<div id="expense_table">
+							<div class="b_line row shadow">
+								<div class="blcell col-7">Jedzenie</div>
+								<div class="brcell col-4">623.12</div>
+								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
+									<span class="fa fa-file-text-o"></span>
+								</button>
+							</div>
+							<div class="b_line row shadow">
+								<div class="blcell col-7">Mieszkanie</div>
+								<div class="brcell col-4">1450.00</div>
+								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
+									<span class="fa fa-file-text-o"></span>
+								</button>
+							</div>
+							<div class="b_line row shadow">
+								<div class="blcell col-7">Transport</div>
+								<div class="brcell col-4">412.35</div>
+								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
+									<span class="fa fa-file-text-o"></span>
+								</button>
+							</div>
+							<div class="b_line row shadow">
+								<div class="blcell col-7">Telekomunikacja</div>
+								<div class="brcell col-4">140.00</div>
+								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
+									<span class="fa fa-file-text-o"></span>
+								</button>
+							</div>
+							<div class="b_line row shadow">
+								<div class="blcell col-7">Opieka zdrowotna</div>
+								<div class="brcell col-4">20.00</div>
+								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
+									<span class="fa fa-file-text-o"></span>
+								</button>
+							</div>
+							<div class="b_line row shadow">
+								<div class="blcell col-7">Ubranie</div>
+								<div class="brcell col-4">120.00</div>
+								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
+									<span class="fa fa-file-text-o"></span>
+								</button>
+							</div>
+							<div class="b_line row shadow">
+								<div class="blcell col-7">Higiena</div>
+								<div class="brcell col-4">29.80</div>
+								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
+									<span class="fa fa-file-text-o"></span>
+								</button>
+							</div>
+							<div class="b_line row shadow">
+								<div class="blcell col-7">Dzieci</div>
+								<div class="brcell col-4">0.00</div>
+								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
+									<span class="fa fa-file-text-o"></span>
+								</button>
+							</div>
+							<div class="b_line row shadow">
+								<div class="blcell col-7">Rozrywka</div>
+								<div class="brcell col-4">151.00</div>
+								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
+									<span class="fa fa-file-text-o"></span>
+								</button>
+							</div>
+							<div class="b_line row shadow">
+								<div class="blcell col-7">Wycieczka</div>
+								<div class="brcell col-4">650.00</div>
+								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
+									<span class="fa fa-file-text-o"></span>
+								</button>
+							</div>
+							<div class="b_line row shadow">
+								<div class="blcell col-7">Szkolenia</div>
+								<div class="brcell col-4">0.00</div>
+								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
+									<span class="fa fa-file-text-o"></span>
+								</button>
+							</div>
+							<div class="b_line row shadow">
+								<div class="blcell col-7">Książki</div>
+								<div class="brcell col-4">99.00</div>
+								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
+									<span class="fa fa-file-text-o"></span>
+								</button>
+							</div>
+							<div class="b_line row shadow">
+								<div class="blcell col-7">Oszczędności</div>
+								<div class="brcell col-4">0.00</div>
+								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
+									<span class="fa fa-file-text-o"></span>
+								</button>
+							</div>
+							<div class="b_line row shadow">
+								<div class="blcell col-7">Emertytura</div>
+								<div class="brcell col-4">0.00</div>
+								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
+									<span class="fa fa-file-text-o"></span>
+								</button>
+							</div>
+							<div class="b_line row shadow">
+								<div class="blcell col-7">Spłata długów</div>
+								<div class="brcell col-4">0.00</div>
+								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
+									<span class="fa fa-file-text-o"></span>
+								</button>
+							</div>
+							<div class="b_line row shadow">
+								<div class="blcell col-7">Darowizna</div>
+								<div class="brcell col-4">55.00</div>
+								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
+									<span class="fa fa-file-text-o"></span>
+								</button>
+							</div>
+							<div class="b_line row shadow">
+								<div class="blcell col-7">Inne wydatki</div>
+								<div class="brcell col-4">44.00</div>
+								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
+									<span class="fa fa-file-text-o"></span>
+								</button>
+							</div>
 						</div>
-						<div class="b_line row shadow">
-							<div class="blcell col-7">Mieszkanie</div>
-							<div class="brcell col-4">1450.00</div>
-							<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-								<span class="fa fa-file-text-o"></span>
-							</button>
-						</div>
-						<div class="b_line row shadow">
-							<div class="blcell col-7">Transport</div>
-							<div class="brcell col-4">412.35</div>
-							<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-								<span class="fa fa-file-text-o"></span>
-							</button>
-						</div>
-						<div class="b_line row shadow">
-							<div class="blcell col-7">Telekomunikacja</div>
-							<div class="brcell col-4">140.00</div>
-							<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-								<span class="fa fa-file-text-o"></span>
-							</button>
-						</div>
-						<div class="b_line row shadow">
-							<div class="blcell col-7">Opieka zdrowotna</div>
-							<div class="brcell col-4">20.00</div>
-							<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-								<span class="fa fa-file-text-o"></span>
-							</button>
-						</div>
-						<div class="b_line row shadow">
-							<div class="blcell col-7">Ubranie</div>
-							<div class="brcell col-4">120.00</div>
-							<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-								<span class="fa fa-file-text-o"></span>
-							</button>
-						</div>
-						<div class="b_line row shadow">
-							<div class="blcell col-7">Higiena</div>
-							<div class="brcell col-4">29.80</div>
-							<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-								<span class="fa fa-file-text-o"></span>
-							</button>
-						</div>
-						<div class="b_line row shadow">
-							<div class="blcell col-7">Dzieci</div>
-							<div class="brcell col-4">0.00</div>
-							<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-								<span class="fa fa-file-text-o"></span>
-							</button>
-						</div>
-						<div class="b_line row shadow">
-							<div class="blcell col-7">Rozrywka</div>
-							<div class="brcell col-4">151.00</div>
-							<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-								<span class="fa fa-file-text-o"></span>
-							</button>
-						</div>
-						<div class="b_line row shadow">
-							<div class="blcell col-7">Wycieczka</div>
-							<div class="brcell col-4">650.00</div>
-							<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-								<span class="fa fa-file-text-o"></span>
-							</button>
-						</div>
-						<div class="b_line row shadow">
-							<div class="blcell col-7">Szkolenia</div>
-							<div class="brcell col-4">0.00</div>
-							<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-								<span class="fa fa-file-text-o"></span>
-							</button>
-						</div>
-						<div class="b_line row shadow">
-							<div class="blcell col-7">Książki</div>
-							<div class="brcell col-4">99.00</div>
-							<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-								<span class="fa fa-file-text-o"></span>
-							</button>
-						</div>
-						<div class="b_line row shadow">
-							<div class="blcell col-7">Oszczędności</div>
-							<div class="brcell col-4">0.00</div>
-							<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-								<span class="fa fa-file-text-o"></span>
-							</button>
-						</div>
-						<div class="b_line row shadow">
-							<div class="blcell col-7">Emertytura</div>
-							<div class="brcell col-4">0.00</div>
-							<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-								<span class="fa fa-file-text-o"></span>
-							</button>
-						</div>
-						<div class="b_line row shadow">
-							<div class="blcell col-7">Spłata długów</div>
-							<div class="brcell col-4">0.00</div>
-							<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-								<span class="fa fa-file-text-o"></span>
-							</button>
-						</div>
-						<div class="b_line row shadow">
-							<div class="blcell col-7">Darowizna</div>
-							<div class="brcell col-4">55.00</div>
-							<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-								<span class="fa fa-file-text-o"></span>
-							</button>
-						</div>
-						<div class="b_line row shadow">
-							<div class="blcell col-7">Inne wydatki</div>
-							<div class="brcell col-4">44.00</div>
-							<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-								<span class="fa fa-file-text-o"></span>
-							</button>
-						</div>
-						
 					</div>
 					 
-					
 				</div>
 			
 			</div>
@@ -292,10 +305,7 @@
 		
 	</main>
 	
-	
-	
-	
-	<!-- dateModal -->
+<!------dateModal----------------------------------------------------------------------------------->	
 	<div class="modal fade" id="dateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog" role="document">
 			<form class="modal-content" action="" method="post" enctype="multipart/form-data">
@@ -307,8 +317,6 @@
 				</div>
 				<div class="modal-body">
 					<section>
-				
-				
 						<div class="container">
 							<div class="row">
 								<label class="offset-1 col-2" for="income_date">Od: </label>
@@ -319,8 +327,6 @@
 								<input class="col-7" type="date" name="income_date" value="2019-01-31">
 							</div>
 						</div>
-					
-					
 					</section>
 				</div>
 				<div class="modal-footer">
@@ -329,8 +335,7 @@
 			</form>
 		</div>
 	</div>
-	
-	<!-- exampleListModal -->
+<!------exampleListModal---------------------------------------------------------------------------->	
 	<div class="modal fade" id="listModal" tabindex="-1" role="dialog" aria-labelledby="listModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg" role="document">
 			<form class="modal-content" action="" method="post" enctype="multipart/form-data">
@@ -342,9 +347,7 @@
 				</div>
 				<div class="modal-body">
 					<section>
-					
 						<div>Nazwa kategorii</div>
-				
 						<div class="container">
 								<div class="modal_line row shadow">
 									<input type="number" class="modal_cell col-12 col-sm-6 col-lg-3" step="0.01" value="2000.00" min="0.01">
@@ -372,8 +375,6 @@
 									<input type="text" class="modal_cell col-12 col-lg-6" placeholder="Notatki..." onfocus="this.placeholder=''Notatki..." onblur="this.placeholder='Notatki...'" value="">
 								</div>
 						</div>
-					
-					
 					</section>
 				</div>
 				<div class="modal-footer">
@@ -382,13 +383,37 @@
 			</form>
 		</div>
 	</div>
+<!---legendModal------------------------------------------------------------------------------------------>
+	<div class="modal fade" id="legendModal" tabindex="-1" role="dialog" aria-labelledby="legendModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<form class="modal-content" action="" method="post" enctype="multipart/form-data">
+				<div class="modal-header">
+					<h5 class="modal-title" id="legendModalLabel">Legenda</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<div id="legendwrapper">
+						<div id="legenddiv"></div>
+					</div>
+				</div>
+				
+			</form>
+		</div>
+	</div>
+<!-------------------------------------------------------------------------------------------------------------------------->
+
 	
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 	
-	<script src="js/jquery.canvasjs.min.js"></script>
-	<script src="js/balance.pie.chart.js"></script>
+	
+	<script src="https://www.amcharts.com/lib/4/core.js"></script>
+	<script src="https://www.amcharts.com/lib/4/charts.js"></script>
+	<script src="http://www.amcharts.com/lib/4/themes/kelly.js"></script>
+	<script src="js/piechart.js"></script>
 	
 </body>
 </html>
