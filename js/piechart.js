@@ -67,10 +67,10 @@ pieSeries.ticks.template.disabled = true;
 // Disable tooltips
 //pieSeries.slices.template.tooltipText = "";
 
-/* Create legend */
+// Create legend
 chart.legend = new am4charts.Legend();
 
-/* Create a separate container to put legend in */
+// Create a separate container to put legend in
 var legendContainer = am4core.create("legenddiv", am4core.Container);
 legendContainer.width = am4core.percent(100);
 legendContainer.height = am4core.percent(100);
