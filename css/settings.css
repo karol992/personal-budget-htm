@@ -1,11 +1,14 @@
-.settings-group {
+.settings_group {
 	padding: 10px;
 	border: 1px solid #7F9949;
 	color: rgba(0, 0, 0, 0.5);
 	text-align: center;
-	margin-top: 5px;
+	margin-top: 10px;
 	display: inline-block;
 	width: 100%;
+}
+.last_group {
+	margin-bottom: 20px;
 }
 .nav-link {
 	color: rgba(0, 0, 0, 0.5);
@@ -13,15 +16,19 @@
 .nav-link:hover {
 	color: rgba(0, 0, 0, 0.7);
 }
-.bg-del:hover {
-	background-color: #dc3545;
-	border: 2px solid #6e1a22;
-}
 .btn_settings {
 	font-size: 16px;
-	margin: 10px;
 	border: 1px solid #7F9949;
 	background-color: #BBCC99;
+	width: 100%;
+}
+.btn_settings:hover {
+	background-color: #99AACC;
+	border: 1px solid #6973FA;
+}
+.bg_del:hover {
+	background-color: #dc3545;
+	border: 1px solid #6e1a22;
 }
 .btn_icon {
 	border: 1px solid #7F9949;
