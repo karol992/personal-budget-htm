@@ -101,7 +101,6 @@ input[type=date]::-webkit-calendar-picker-indicator {
 	border: 1px solid #7F9949;
 	border-right: none;
 	border-bottom: none;
-	border-right: none;
 	background-color: white;
 }
 

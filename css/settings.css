@@ -1,11 +1,11 @@
 .settings-group {
 	padding: 10px;
-	background-color: #BBCC99;
-	border-radius: 10px;
-	border: 2px solid #7F9949;
+	border: 1px solid #7F9949;
 	color: rgba(0, 0, 0, 0.5);
 	text-align: center;
 	margin-top: 5px;
+	display: inline-block;
+	width: 100%;
 }
 .nav-link {
 	color: rgba(0, 0, 0, 0.5);
@@ -17,63 +17,18 @@
 	background-color: #dc3545;
 	border: 2px solid #6e1a22;
 }
-
-.modal-dialog {
-	;
+.btn_settings {
+	font-size: 16px;
+	margin: 10px;
+	border: 1px solid #7F9949;
+	background-color: #BBCC99;
 }
-.modal-content {
-	background-color: #FFFBD9;
-	border-radius:10px;
-}
-
-.table-container {
-	border: 2px solid #7F9949;
+.btn_icon {
+	border: 1px solid #7F9949;
 	border-right: none;
-	border-bottom: none;
-	display: table;
-}
-.table-category {
-	/*border: 2px solid #7F9949;*/
-	border-left: none;
-	border-top: none;
 	padding: 0px;
-	display: inline-block;
+	border-radius: 0px;
 }
-.table-value {
-	/*border: 2px solid #7F9949;*/
-	border-left: none;
-	border-top: none;
-	padding: 0px;
-	display: inline-block;
-}
-.table-btn {
-	background-color: #BBCC99;
-	border: 2px solid #7F9949;
-	border-left: none;
-	border-top: none;
-	text-align: center;
-	padding: 5px;
-	display: inline-block;
-}
-.table-btn:hover {
-	cursor: pointer;
-	color: rgba(0, 0, 0, 0.7);
-	background-color: #99AACC;
-}
-
-.test {
-	background-color: red;
-}
-.input-field {
-	background-color: white;
-	font-size: 20px;
-	color: #7F9949;
-	width: 100%;
-	height: 100%;
-	outline: none;
-	background-color: #BBCC99;
-    border: 2px solid #7F9949;
-	border-left: none;
-	border-top: none;
-	padding-left: 5px;
+.btn_title {
+	;
 }
