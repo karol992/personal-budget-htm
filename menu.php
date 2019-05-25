@@ -1,3 +1,14 @@
+<?php
+
+	session_start();
+	
+	if (!isset($_SESSION['logged']))
+	{
+		header('Location: index.php');
+		exit();
+	}
+	
+?>
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -66,7 +77,7 @@
 	
 	<main>
 		<div class="login_info">
-			Witaj <span id="login_name">ZalogowaneImię</span>!
+			<?php echo "Witaj ".$_SESSION['username']."!"; ?>
 		</div>
 		<section>
 				<div class="row offset-xl-3 offset-lg-2 offset-md-1 offset-sm-2 offset-1 col-xl-6 col-lg-8 col-md-10 col-sm-8 col-10">

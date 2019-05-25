@@ -1,3 +1,121 @@
+<?php
+
+	session_start();
+	
+	if (isset($_SESSION['error'])) unset($_SESSION['error']);
+	
+	if (isset($_POST['email']))
+	{
+		//Udana walidacja? Załóżmy, że tak!
+		$correct_flag=true;
+		
+		//Sprawdź poprawność nickname'a
+		$username = $_POST['username'];
+		
+		//Sprawdzenie długości nicka
+		if ((strlen($username)<3) || (strlen($username)>20))
+		{
+			$correct_flag=false;
+			$_SESSION['e_username']="Nick musi posiadać od 3 do 20 znaków!";
+		}
+		
+		if (ctype_alnum($username)==false)
+		{
+			$correct_flag=false;
+			$_SESSION['e_username']="Nick może składać się tylko z liter i cyfr (bez polskich znaków)";
+		}
+		
+		// Sprawdź poprawność adresu email
+		$email = $_POST['email'];
+		$emailB = filter_var($email, FILTER_SANITIZE_EMAIL);
+		
+		if ((filter_var($emailB, FILTER_VALIDATE_EMAIL)==false) || ($emailB!=$email))
+		{
+			$correct_flag=false;
+			$_SESSION['e_email']="Podaj poprawny adres e-mail!";
+		}
+		
+		//Sprawdź poprawność hasła
+		$password1 = $_POST['password1'];
+		$password2 = $_POST['password2'];
+		
+		if ((strlen($password1)<8) || (strlen($password1)>20))
+		{
+			$correct_flag=false;
+			$_SESSION['e_password']="Hasło musi posiadać od 8 do 20 znaków!";
+		}
+		
+		if ($password1!=$password2)
+		{
+			$correct_flag=false;
+			$_SESSION['e_password']="Podane hasła nie są identyczne!";
+		}	
+
+		$password_hash = password_hash($password1, PASSWORD_DEFAULT);
+						
+		
+		//Zapamiętaj wprowadzone dane
+		$_SESSION['fr_username'] = $username;
+		$_SESSION['fr_email'] = $email;
+		$_SESSION['fr_password1'] = $password1;
+		$_SESSION['fr_password2'] = $password2;
+		
+		require_once "connect.php";
+		mysqli_report(MYSQLI_REPORT_STRICT);
+		
+		try 
+		{
+			$connection = new mysqli($host, $db_user, $db_password, $db_name);
+			if ($connection->connect_errno!=0)
+			{
+				throw new Exception(mysqli_connect_errno());
+			}
+			else
+			{
+				//Czy email już istnieje?
+				$result = $connection->query("SELECT id FROM users WHERE email='$email'");
+				
+				if (!$result) throw new Exception($connection->error);
+				
+				$emails_number = $result->num_rows;
+				if($emails_number>0)
+				{
+					$correct_flag=false;
+					$_SESSION['e_email']="Istnieje już konto przypisane do tego adresu e-mail!";
+				}		
+				
+				if ($correct_flag==true)
+				{
+					//Hurra, wszystkie testy zaliczone, dodajemy gracza do bazy
+					
+					if ($connection->query(
+					"INSERT INTO users VALUES (NULL, '$username', '$password_hash', '$email');"
+					))
+					{
+						$_SESSION['registration_done']=true;
+						header('Location: index.php');
+					}
+					else
+					{
+						throw new Exception($connection->error);
+					}
+					
+				}
+				
+				$connection->close();
+			}
+			
+		}
+		catch(Exception $e)
+		{
+			echo '<span class="input_error">Błąd serwera! Przepraszamy za niedogodności i prosimy o rejestrację w innym terminie!</span>';
+			echo '<br />Informacja developerska: '.$e;
+		}
+		
+	}
+	
+	
+?>
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -53,33 +171,79 @@
 	
 	<main>
 	
-		<form class="col-12 col-sm-8 col-md-6 col-xl-4 offset-sm-2 offset-md-3 offset-xl-4 form-box" action="">
+		<form class="col-12 col-sm-8 col-md-6 col-xl-4 offset-sm-2 offset-md-3 offset-xl-4 form-box" method="post">
 
 			 <div class="input-container">
 				<i class="fa fa-user bg-icon fa-fw single-icon"></i>
-				<input class="input-field" type="text" placeholder="imię" onfocus="this.placeholder=''" onblur="this.placeholder='imię'">
+				<input class="input-field" type="text" placeholder="imię" onfocus="this.placeholder=''" onblur="this.placeholder='imię'"
+				value="<?php
+				if (isset($_SESSION['fr_username']))
+				{
+					echo $_SESSION['fr_username'];
+					unset($_SESSION['fr_username']);
+				}
+				?>" name="username">
+				
 			 </div>
 			  
 			 <div class="input-container">
 				<i class="fa fa-envelope bg-icon fa-fw single-icon"></i>
-				<input class="input-field" type="text" placeholder="e-mail" onfocus="this.placeholder=''" onblur="this.placeholder='e-mail'">
+				<input class="input-field" type="text" placeholder="e-mail" onfocus="this.placeholder=''" onblur="this.placeholder='e-mail'" 
+				value="<?php
+					if (isset($_SESSION['fr_email']))
+					{
+						echo $_SESSION['fr_email'];
+						unset($_SESSION['fr_email']);
+					}
+				?>" name="email">
 			 </div>
 
 			 <div class="input-container">
 				<i class="fa fa-lock bg-icon fa-fw single-icon"></i>
-				<input class="input-field" type="password" placeholder="hasło" onfocus="this.placeholder=''" onblur="this.placeholder='hasło'">
+				<input class="input-field" type="password" placeholder="hasło" onfocus="this.placeholder=''" onblur="this.placeholder='hasło'" 
+				value="<?php
+					if (isset($_SESSION['fr_password1']))
+					{
+						echo $_SESSION['fr_password1'];
+						unset($_SESSION['fr_password1']);
+					}
+				?>" name="password1">
 			 </div>
 			  
 			 <div class="input-container">
 				<i class="bg-icon"> <i class="fa fa-lock fa-fw single-icon"></i><i class="fa fa-reply fa-fw single-icon"></i></i>
-				<input class="input-field" type="password" placeholder="powtórz hasło" onfocus="this.placeholder=''" onblur="this.placeholder='powtórz hasło'">
+				<input class="input-field" type="password" placeholder="powtórz hasło" onfocus="this.placeholder=''" onblur="this.placeholder='powtórz hasło'" 
+				value="<?php
+					if (isset($_SESSION['fr_password2']))
+					{
+						echo $_SESSION['fr_password2'];
+						unset($_SESSION['fr_password2']);
+					}
+				?>" name="password2">
 			 </div>
 			
 			<div class="submit-container">
 				<i class="fa fa-user-plus fa-fw submit-icon"></i>
 				<button type="submit" class="btn">Zarejestruj</button>
 			</div>
-		  
+			<?php
+				if (isset($_SESSION['e_username']))
+				{
+					echo '<div class="input_error">'.$_SESSION['e_username'].'</div>';
+					unset($_SESSION['e_username']);
+				}
+				if (isset($_SESSION['e_email']))
+				{
+					echo '<div class="input_error">'.$_SESSION['e_email'].'</div>';
+					unset($_SESSION['e_email']);
+				}
+				if (isset($_SESSION['e_password']))
+				{
+					echo '<div class="input_error">'.$_SESSION['e_password'].'</div>';
+					unset($_SESSION['e_password']);
+				}
+				
+			?>
 		</form>
 	
 	</main>

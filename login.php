@@ -22,34 +22,36 @@
 		$password = $_POST['password'];
 		
 		$email = htmlentities($email, ENT_QUOTES, "UTF-8");
-		$password = htmlentities($password, ENT_QUOTES, "UTF-8");
 	
 		if ($result = @$connection->query(
-		sprintf("SELECT * FROM users WHERE email='%s' AND password='%s'",
-		mysqli_real_escape_string($connection,$email),
-		mysqli_real_escape_string($connection,$password))))
+		sprintf("SELECT * FROM users WHERE email='%s'",
+		mysqli_real_escape_string($connection,$email))))
 		{
 			$number_of_users = $result->num_rows;
 			if($number_of_users>0)
 			{
-				$_SESSION['logged'] = true;
+				$line = $result->fetch_assoc();
 				
-				$wiersz = $result->fetch_assoc();
-				/*$_SESSION['id'] = $wiersz['id'];
-				$_SESSION['user'] = $wiersz['user'];
-				$_SESSION['drewno'] = $wiersz['drewno'];
-				$_SESSION['kamien'] = $wiersz['kamien'];
-				$_SESSION['zboze'] = $wiersz['zboze'];
-				$_SESSION['email'] = $wiersz['email'];
-				$_SESSION['dnipremium'] = $wiersz['dnipremium'];*/
-				
-				unset($_SESSION['error']);
-				$result->free_result();
-				header('Location: menu.php');
+				if (password_verify($password, $line['password']))
+				{
+					$_SESSION['logged'] = true;
+					$_SESSION['id'] = $line['id'];
+					$_SESSION['username'] = $line['username'];
+					$_SESSION['email'] = $line['email'];
+					
+					unset($_SESSION['error']);
+					$result->free_result();
+					header('Location: menu.php');
+				}
+				else 
+				{
+					$_SESSION['error'] = '<div class="input_error">Nieprawidłowy login lub hasło!</div>';
+					header('Location: index.php');
+				}
 				
 			} else {
 				
-				$_SESSION['error'] = '<span style="color:red">Nieprawidłowy email lub hasło!</span>';
+				$_SESSION['error'] = '<div class="input_error">Nieprawidłowy email lub hasło!</div>';
 				header('Location: index.php');
 				
 			}

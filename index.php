@@ -2,6 +2,17 @@
 
 	session_start();
 	
+	//Usuwanie zmiennych pamiętających wartości wpisane do formularza
+	if (isset($_SESSION['fr_username'])) unset($_SESSION['fr_username']);
+	if (isset($_SESSION['fr_email'])) unset($_SESSION['fr_email']);
+	if (isset($_SESSION['fr_password1'])) unset($_SESSION['fr_password1']);
+	if (isset($_SESSION['fr_password2'])) unset($_SESSION['fr_password2']);
+	
+	//Usuwanie błędów rejestracji
+	if (isset($_SESSION['e_username'])) unset($_SESSION['e_username']);
+	if (isset($_SESSION['e_email'])) unset($_SESSION['e_email']);
+	if (isset($_SESSION['e_password'])) unset($_SESSION['e_password']);
+	
 	if ((isset($_SESSION['logged'])) && ($_SESSION['logged']==true))
 	{
 		header('Location: menu.php');
@@ -66,25 +77,30 @@
 	
 		<form class="col-12 col-sm-8 col-md-6 col-xl-4 offset-sm-2 offset-md-3 offset-xl-4 form-box" action="login.php" method="post">
 
-		  <div class="input-container">
-			<i class="fa fa-envelope bg-icon fa-fw single-icon"></i>
-			<input class="input-field" type="text" name="email" placeholder="e-mail" onfocus="this.placeholder=''" onblur="this.placeholder='e-mail'">
-		  </div>
+			<div class="input-container">
+				<i class="fa fa-envelope bg-icon fa-fw single-icon"></i>
+				<input class="input-field" type="text" name="email" placeholder="e-mail" onfocus="this.placeholder=''" onblur="this.placeholder='e-mail'">
+			</div>
 
-		  <div class="input-container">
-			<i class="fa fa-lock bg-icon fa-fw single-icon"></i>
-			<input class="input-field" type="password" name="password" placeholder="hasło" onfocus="this.placeholder=''" onblur="this.placeholder='hasło'">
-		  </div>
+			<div class="input-container">
+				<i class="fa fa-lock bg-icon fa-fw single-icon"></i>
+				<input class="input-field" type="password" name="password" placeholder="hasło" onfocus="this.placeholder=''" onblur="this.placeholder='hasło'">
+			</div>
 
-		  <div class="submit-container">
+			<div class="submit-container">
 				<i class="fa fa-sign-in fa-fw submit-icon"></i>
 				<button type="submit" class="btn">Zaloguj</button>
 			</div>
-		  
+				<?php
+					if (isset($_SESSION['error']))	echo $_SESSION['error'];
+					if (isset($_SESSION['registration_done']))
+					{
+						echo "<div>Rejestracja powiodła się! Możesz się zalogować.</div>";
+						unset($_SESSION['registration_done']);
+					}
+				?>
 		</form>
-		<?php
-		if(isset($_SESSION['error']))	echo $_SESSION['error'];
-		?>
+		
 	
 	</main>
 	
