@@ -16,7 +16,7 @@
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&amp;subset=latin-ext" rel="stylesheet">
 	
 	<link rel="stylesheet" href="css/main.css">
-	<link rel="stylesheet" href="css/login.css">
+	<link rel="stylesheet" href="css/registration.css">
 	
 	<!--[if lt IE 9]>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -40,7 +40,7 @@
 				<ul class="navbar-nav offset-6">
 					
 					<li class="nav-item">
-						<a class="nav-link" href="registration.htm"><span class="fa fa-user-plus fa-fw"></span>Rejestracja</a>
+						<a class="nav-link" href="index.php"><span class="fa fa-sign-in fa-fw"></span>Logowanie</a>
 					</li>
 				
 				</ul>
@@ -55,19 +55,29 @@
 	
 		<form class="col-12 col-sm-8 col-md-6 col-xl-4 offset-sm-2 offset-md-3 offset-xl-4 form-box" action="">
 
-		  <div class="input-container">
-			<i class="fa fa-envelope bg-icon fa-fw single-icon"></i>
-			<input class="input-field" type="text" placeholder="email" onfocus="this.placeholder=''" onblur="this.placeholder='e-mail'">
-		  </div>
+			 <div class="input-container">
+				<i class="fa fa-user bg-icon fa-fw single-icon"></i>
+				<input class="input-field" type="text" placeholder="imię" onfocus="this.placeholder=''" onblur="this.placeholder='imię'">
+			 </div>
+			  
+			 <div class="input-container">
+				<i class="fa fa-envelope bg-icon fa-fw single-icon"></i>
+				<input class="input-field" type="text" placeholder="e-mail" onfocus="this.placeholder=''" onblur="this.placeholder='e-mail'">
+			 </div>
 
-		  <div class="input-container">
-			<i class="fa fa-lock bg-icon fa-fw single-icon"></i>
-			<input class="input-field" type="password" placeholder="hasło" onfocus="this.placeholder=''" onblur="this.placeholder='hasło'">
-		  </div>
-
-		  <div class="submit-container">
-				<i class="fa fa-sign-in fa-fw submit-icon"></i>
-				<button type="submit" class="btn">Zaloguj</button>
+			 <div class="input-container">
+				<i class="fa fa-lock bg-icon fa-fw single-icon"></i>
+				<input class="input-field" type="password" placeholder="hasło" onfocus="this.placeholder=''" onblur="this.placeholder='hasło'">
+			 </div>
+			  
+			 <div class="input-container">
+				<i class="bg-icon"> <i class="fa fa-lock fa-fw single-icon"></i><i class="fa fa-reply fa-fw single-icon"></i></i>
+				<input class="input-field" type="password" placeholder="powtórz hasło" onfocus="this.placeholder=''" onblur="this.placeholder='powtórz hasło'">
+			 </div>
+			
+			<div class="submit-container">
+				<i class="fa fa-user-plus fa-fw submit-icon"></i>
+				<button type="submit" class="btn">Zarejestruj</button>
 			</div>
 		  
 		</form>
