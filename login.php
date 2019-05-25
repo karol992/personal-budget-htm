@@ -23,24 +23,24 @@
 		
 		$email = htmlentities($email, ENT_QUOTES, "UTF-8");
 	
-		if ($result = @$connection->query(
+		if ($user_info_request = @$connection->query(
 		sprintf("SELECT * FROM users WHERE email='%s'",
 		mysqli_real_escape_string($connection,$email))))
 		{
-			$number_of_users = $result->num_rows;
+			$number_of_users = $user_info_request->num_rows;
 			if($number_of_users>0)
 			{
-				$line = $result->fetch_assoc();
+				$user_info_container = $user_info_request->fetch_assoc();
 				
-				if (password_verify($password, $line['password']))
+				if (password_verify($password, $user_info_container['password']))
 				{
 					$_SESSION['logged'] = true;
-					$_SESSION['id'] = $line['id'];
-					$_SESSION['username'] = $line['username'];
-					$_SESSION['email'] = $line['email'];
+					$_SESSION['id'] = $user_info_container['id'];
+					$_SESSION['username'] = $user_info_container['username'];
+					$_SESSION['email'] = $user_info_container['email'];
 					
 					unset($_SESSION['error']);
-					$result->free_result();
+					$user_info_request->free_result();
 					header('Location: menu.php');
 				}
 				else 

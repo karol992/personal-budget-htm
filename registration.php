@@ -73,11 +73,11 @@
 			else
 			{
 				//Czy email już istnieje?
-				$result = $connection->query("SELECT id FROM users WHERE email='$email'");
+				$check_email = $connection->query("SELECT id FROM users WHERE email='$email'");
 				
-				if (!$result) throw new Exception($connection->error);
+				if (!$check_email) throw new Exception($connection->error);
 				
-				$emails_number = $result->num_rows;
+				$emails_number = $check_email->num_rows;
 				if($emails_number>0)
 				{
 					$correct_flag=false;
@@ -88,10 +88,16 @@
 				{
 					//Hurra, wszystkie testy zaliczone, dodajemy gracza do bazy
 					
-					if ($connection->query(
-					"INSERT INTO users VALUES (NULL, '$username', '$password_hash', '$email');"
-					))
+					if (($connection->query("INSERT INTO users VALUES (NULL, '$username', '$password_hash', '$email')")))
 					{
+						$userid_container=@$connection->query(sprintf("SELECT id FROM users WHERE email='$email'",mysqli_real_escape_string($connection,$email)));
+						$userid_var=$userid_container->fetch_assoc();
+						$userid_int=$userid_var['id'];
+						$connection->query("INSERT INTO payment_methods_assigned_to_users (id, user_id, name) SELECT NULL, $userid_int, name FROM payment_methods_default");
+						$connection->query("INSERT INTO incomes_category_assigned_to_users (id, user_id, name) SELECT NULL, $userid, name FROM incomes_category_default");
+						$connection->query("INSERT INTO expenses_category_assigned_to_users (id, user_id, name) SELECT NULL, $userid, name FROM expenses_category_default");
+
+						
 						$_SESSION['registration_done']=true;
 						header('Location: index.php');
 					}
