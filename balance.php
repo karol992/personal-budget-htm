@@ -1,4 +1,13 @@
-<!--  -->
+<?php
+
+	session_start();
+	
+	if (!isset($_SESSION['logged'])) {
+		header('Location: index.php');
+		exit();
+	}
+	
+?>
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -15,9 +24,9 @@
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&amp;subset=latin-ext" rel="stylesheet">
+	<link rel="stylesheet" href="css/piechart.css">
 	<link rel="stylesheet" href="css/main.css">
 	<link rel="stylesheet" href="css/balance.css">
-	<link rel="stylesheet" href="css/piechart.css">
 	
 	<!--[if lt IE 9]>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -42,22 +51,22 @@
 			<div class="collapse navbar-collapse  justify-content-center" id="mainmenu">
 				<ul class="navbar-nav">
 					<li class="nav-item">
-						<a class="nav-link" href="menu.htm"><span class="fa fa-home fa-fw"></span>Start </a>
+						<a class="nav-link" href="menu.php"><span class="fa fa-home fa-fw"></span>Start </a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="income.htm"><span class="fa fa-money fa-fw"></span>Przychód </a>
+						<a class="nav-link" href="income.php"><span class="fa fa-money fa-fw"></span>Przychód </a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="expense.htm"><span class="fa fa-shopping-cart fa-fw"></span>Wydatek </a>
+						<a class="nav-link" href="expense.php"><span class="fa fa-shopping-cart fa-fw"></span>Wydatek </a>
 					</li>
 					<li class="nav-item-active">
 						<div class="nav-link"><span class="fa fa-pie-chart fa-fw"></span>Bilans </div>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="settings.htm"><span class="fa fa-wrench fa-fw"></span>Ustawienia </a>
+						<a class="nav-link" href="settings.php"><span class="fa fa-wrench fa-fw"></span>Ustawienia </a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="login.htm"><span class="fa fa-sign-out fa-fw"></span>Wyloguj </a>
+						<a class="nav-link" href="logout.php"><span class="fa fa-sign-out fa-fw"></span>Wyloguj </a>
 					</li>
 				</ul>
 			</div>

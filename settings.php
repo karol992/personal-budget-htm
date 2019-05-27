@@ -1,3 +1,13 @@
+<?php
+
+	session_start();
+	
+	if (!isset($_SESSION['logged'])) {
+		header('Location: index.php');
+		exit();
+	}
+	
+?>
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -41,22 +51,22 @@
 			<div class="collapse navbar-collapse  justify-content-center" id="mainmenu">
 				<ul class="navbar-nav">
 					<li class="nav-item">
-						<a class="nav-link" href="menu.htm"><span class="fa fa-home fa-fw"></span>Start </a>
+						<a class="nav-link" href="menu.php"><span class="fa fa-home fa-fw"></span>Start </a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="income.htm"><span class="fa fa-money fa-fw"></span>Przychód </a>
+						<a class="nav-link" href="income.php"><span class="fa fa-money fa-fw"></span>Przychód </a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="expense.htm"><span class="fa fa-shopping-cart fa-fw"></span>Wydatek </a>
+						<a class="nav-link" href="expense.php"><span class="fa fa-shopping-cart fa-fw"></span>Wydatek </a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="balance.htm"><span class="fa fa-pie-chart fa-fw"></span>Bilans </a>
+						<a class="nav-link" href="balance.php"><span class="fa fa-pie-chart fa-fw"></span>Bilans </a>
 					</li>
 					<li class="nav-item-active">
 						<div class="nav-link"><span class="fa fa-wrench fa-fw"></span>Ustawienia </div>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="login.htm"><span class="fa fa-sign-out fa-fw"></span>Wyloguj </a>
+						<a class="nav-link" href="logout.php"><span class="fa fa-sign-out fa-fw"></span>Wyloguj </a>
 					</li>
 				</ul>
 			</div>

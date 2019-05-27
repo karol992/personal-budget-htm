@@ -1,3 +1,13 @@
+<?php
+
+	session_start();
+	
+	if (!isset($_SESSION['logged'])) {
+		header('Location: index.php');
+		exit();
+	}
+	
+?>
 <!DOCTYPE html>
 <html lang="pl">
 <head>
@@ -16,7 +26,8 @@
 	<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&amp;subset=latin-ext" rel="stylesheet">
 	
 	<link rel="stylesheet" href="css/main.css">
-	<link rel="stylesheet" href="css/income.css">
+	<link rel="stylesheet" href="css/menu.css">
+
 	
 	<!--[if lt IE 9]>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -40,23 +51,23 @@
 			<!-- Menu Icons -->
 			<div class="collapse navbar-collapse  justify-content-center" id="mainmenu">
 				<ul class="navbar-nav">
-					<li class="nav-item">
-						<a class="nav-link" href="menu.htm"><span class="fa fa-home fa-fw"></span>Start </a>
-					</li>
 					<li class="nav-item-active">
-						<div class="nav-link"><span class="fa fa-money fa-fw"></span>Przychód </div>
+						<div class="nav-link"><span class="fa fa-home fa-fw"></span>Start </div>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="expense.htm"><span class="fa fa-shopping-cart fa-fw"></span>Wydatek </a>
+						<a class="nav-link" href="income.php"><span class="fa fa-money fa-fw"></span>Przychód </a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="balance.htm"><span class="fa fa-pie-chart fa-fw"></span>Bilans </a>
+						<a class="nav-link" href="expense.php"><span class="fa fa-shopping-cart fa-fw"></span>Wydatek </a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="settings.htm"><span class="fa fa-wrench fa-fw"></span>Ustawienia </a>
+						<a class="nav-link" href="balance.php"><span class="fa fa-pie-chart fa-fw"></span>Bilans </a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="login.htm"><span class="fa fa-sign-out fa-fw"></span>Wyloguj </a>
+						<a class="nav-link" href="settings.php"><span class="fa fa-wrench fa-fw"></span>Ustawienia </a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="logout.php"><span class="fa fa-sign-out fa-fw"></span>Wyloguj </a>
 					</li>
 				</ul>
 			</div>
@@ -64,41 +75,18 @@
 	</header>
 	
 	<main>
-		<!-- Income adding -->
-		<form class="container offset-xl-3 offset-lg-2 offset-md-1 offset-sm-2 offset-1 col-xl-6 col-lg-8 col-md-10 col-sm-8 col-10" action="" method="post" enctype="multipart/form-data">
-			<!-- Amount of income -->
-			<div class="income_section col-12 col-md-6">
-				<div><label for="income_value">Kwota: </label></div>
-				<div><input type="number" name="income_value" step="0.01" value="2000.00" min="0.01" required></div>
-			</div>
-			<!-- Date of income -->
-			<div class="income_section col-12 col-md-6">
-				<div><label for="income_date">Data: </label></div>
-				<div><input type="date" name="income_date" value="2019-01-31"></div>
-			</div>
-			<!-- Category of income -->
-			<div class="income_section col-12 col-md-6">
-				<div>Kategoria: </div>
-				<select name="income_category">
-					<option value="1" selected> Wynagrodzenie </option>
-					<option value="2"> Odsetki bankowe </option>
-					<option value="3"> Sprzedaż na allegro </option>
-					<option value="4"> Inne </option>
-				</select>
-			</div>
-			<!-- Income note -->
-			<div class="income_section col-12 col-md-6">
-				<label for="income_note">Notatki: </label>
-				<input type="textarea" id="income_note" placeholder="Opcjonalnie..." onfocus="this.placeholder=''" onblur="this.placeholder='Opcjonalnie...'">
-			</div>
-			<!-- Income saving -->
-			<div class="income_btn offset-4 offset-md-6 col-4 col-md-3">
-				<button class="btn btn-success" type="submit" value="Submit">Dodaj</button>
-			</div>
-			<div class="income_btn col-4 col-md-3">
-				<button class="btn btn-danger" type="reset" value="Reset">Anuluj</button>
-			</div>
-		</form>
+		<div class="login_info">
+			<?php echo "Witaj ".$_SESSION['username']."!"; ?>
+		</div>
+		<section>
+				<div class="row offset-xl-3 offset-lg-2 offset-md-1 offset-sm-2 offset-1 col-xl-6 col-lg-8 col-md-10 col-sm-8 col-10">
+						<article>Jeśli zależy Ci na wzbogaceniu się, ucz się dyscypliny w sprawach finansowych. Sporządzanie osobistego budżetu z pewnością ci w tym pomoże!</article>
+
+						<article>Pamiętaj, aby zbierać paragony oraz na bieżąco zapisywać dochody i wydatki. Kategoryzacja pozwoli Ci na spersonalizowanie wyników.</article>
+
+						<article>Dzięki aplikacji PersonalBudget poznasz swoje nawyki zakupowe oraz zdiagnozujesz problemy z wydatkami.</article>
+				</div>
+		</section>
 	</main>
 	
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

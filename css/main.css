@@ -44,3 +44,6 @@ h1 {
 	padding: 18px 7px 7px 7px;
 	color: white;
 }
+.input_error {
+	color: red;
+}
