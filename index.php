@@ -2,19 +2,18 @@
 
 	session_start();
 	
-	//Usuwanie zmiennych pamiętających wartości wpisane do formularza
+	//Remove temporary input text
 	if (isset($_SESSION['fr_username'])) unset($_SESSION['fr_username']);
 	if (isset($_SESSION['fr_email'])) unset($_SESSION['fr_email']);
 	if (isset($_SESSION['fr_password1'])) unset($_SESSION['fr_password1']);
 	if (isset($_SESSION['fr_password2'])) unset($_SESSION['fr_password2']);
 	
-	//Usuwanie błędów rejestracji
+	//Remove registration errors
 	if (isset($_SESSION['e_username'])) unset($_SESSION['e_username']);
 	if (isset($_SESSION['e_email'])) unset($_SESSION['e_email']);
 	if (isset($_SESSION['e_password'])) unset($_SESSION['e_password']);
 	
-	if ((isset($_SESSION['logged'])) && ($_SESSION['logged']==true))
-	{
+	if ((isset($_SESSION['logged'])) && ($_SESSION['logged']==true)) {
 		header('Location: menu.php');
 		exit();
 	}
@@ -93,8 +92,7 @@
 			</div>
 				<?php
 					if (isset($_SESSION['error']))	echo $_SESSION['error'];
-					if (isset($_SESSION['registration_done']))
-					{
+					if (isset($_SESSION['registration_done'])) {
 						echo "<div>Rejestracja powiodła się! Możesz się zalogować.</div>";
 						unset($_SESSION['registration_done']);
 					}

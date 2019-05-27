@@ -4,57 +4,49 @@
 	
 	if (isset($_SESSION['error'])) unset($_SESSION['error']);
 	
-	if (isset($_POST['email']))
-	{
-		//Udana walidacja? Załóżmy, że tak!
+	if (isset($_POST['email'])) {
+		//Validation start
 		$correct_flag=true;
 		
-		//Sprawdź poprawność nickname'a
+		//Check correctness of nick
 		$username = $_POST['username'];
 		
-		//Sprawdzenie długości nicka
-		if ((strlen($username)<3) || (strlen($username)>20))
-		{
+		//Check length of nick
+		if ((strlen($username)<3) || (strlen($username)>20)) {
 			$correct_flag=false;
 			$_SESSION['e_username']="Nick musi posiadać od 3 do 20 znaków!";
 		}
 		
-		if (ctype_alnum($username)==false)
-		{
+		if (ctype_alnum($username)==false) {
 			$correct_flag=false;
 			$_SESSION['e_username']="Nick może składać się tylko z liter i cyfr (bez polskich znaków)";
 		}
 		
-		// Sprawdź poprawność adresu email
+		// Check correctness of email 
 		$email = $_POST['email'];
 		$emailB = filter_var($email, FILTER_SANITIZE_EMAIL);
 		
-		if ((filter_var($emailB, FILTER_VALIDATE_EMAIL)==false) || ($emailB!=$email))
-		{
+		if ((filter_var($emailB, FILTER_VALIDATE_EMAIL)==false) || ($emailB!=$email)) {
 			$correct_flag=false;
 			$_SESSION['e_email']="Podaj poprawny adres e-mail!";
 		}
 		
-		//Sprawdź poprawność hasła
+		//Check correctness of password
 		$password1 = $_POST['password1'];
 		$password2 = $_POST['password2'];
-		
-		if ((strlen($password1)<8) || (strlen($password1)>20))
-		{
+		if ((strlen($password1)<8) || (strlen($password1)>20)) {
 			$correct_flag=false;
 			$_SESSION['e_password']="Hasło musi posiadać od 8 do 20 znaków!";
 		}
-		
-		if ($password1!=$password2)
-		{
+		if ($password1!=$password2) {
 			$correct_flag=false;
 			$_SESSION['e_password']="Podane hasła nie są identyczne!";
 		}	
-
+		
 		$password_hash = password_hash($password1, PASSWORD_DEFAULT);
 						
 		
-		//Zapamiętaj wprowadzone dane
+		//Save data
 		$_SESSION['fr_username'] = $username;
 		$_SESSION['fr_email'] = $email;
 		$_SESSION['fr_password1'] = $password1;
@@ -63,61 +55,46 @@
 		require_once "connect.php";
 		mysqli_report(MYSQLI_REPORT_STRICT);
 		
-		try 
-		{
+		try  {
 			$connection = new mysqli($host, $db_user, $db_password, $db_name);
-			if ($connection->connect_errno!=0)
-			{
+			if ($connection->connect_errno!=0) {
 				throw new Exception(mysqli_connect_errno());
-			}
-			else
-			{
-				//Czy email już istnieje?
+			} else {
+				//Whether unique email
 				$check_email = $connection->query("SELECT id FROM users WHERE email='$email'");
-				
 				if (!$check_email) throw new Exception($connection->error);
-				
 				$emails_number = $check_email->num_rows;
-				if($emails_number>0)
-				{
+				if($emails_number>0) {
 					$correct_flag=false;
 					$_SESSION['e_email']="Istnieje już konto przypisane do tego adresu e-mail!";
-				}		
-				
-				if ($correct_flag==true)
-				{
-					//Hurra, wszystkie testy zaliczone, dodajemy gracza do bazy
+				}
+				if ($correct_flag==true) {
+					//No validation crashes
 					
-					if (($connection->query("INSERT INTO users VALUES (NULL, '$username', '$password_hash', '$email')")))
-					{
-						$userid_container=@$connection->query(sprintf("SELECT id FROM users WHERE email='$email'",mysqli_real_escape_string($connection,$email)));
+					if (($connection->query("INSERT INTO users VALUES (NULL, '$username', '$password_hash', '$email')"))) {
+						$userid_container=$connection->query("SELECT id FROM users WHERE email='$email'");
+						if(!$userid_container) throw new Exception($connection->error);
 						$userid_var=$userid_container->fetch_assoc();
 						$userid_int=$userid_var['id'];
-						$connection->query("INSERT INTO payment_methods_assigned_to_users (id, user_id, name) SELECT NULL, $userid_int, name FROM payment_methods_default");
-						$connection->query("INSERT INTO incomes_category_assigned_to_users (id, user_id, name) SELECT NULL, $userid, name FROM incomes_category_default");
-						$connection->query("INSERT INTO expenses_category_assigned_to_users (id, user_id, name) SELECT NULL, $userid, name FROM expenses_category_default");
-
-						
+						$userid_container->free_result();
+							
+						$connection->query("INSERT INTO payment_methods_assigned_to_users (id, user_id, name) SELECT NULL, $userid_int name FROM payment_methods_default");
+						//$connection->query("INSERT INTO incomes_category_assigned_to_users (id, user_id, name) SELECT NULL, $userid_int, name FROM incomes_category_default");
+						//$connection->query("INSERT INTO expenses_category_assigned_to_users (id, user_id, name) SELECT NULL, $userid_int, name FROM expenses_category_default");
+							
 						$_SESSION['registration_done']=true;
 						header('Location: index.php');
-					}
-					else
-					{
+					} else {
 						throw new Exception($connection->error);
 					}
-					
 				}
-				
 				$connection->close();
 			}
-			
+		} catch(Exception $e) {
+			$_SESSION['error'] = '<div class="input_error">Błąd serwera! Przepraszamy za niedogodności i prosimy o rejestrację w innym terminie!</div>
+			<div>Informacja developerska: '.$e.'</div>';
+			header('Location: index.php');
 		}
-		catch(Exception $e)
-		{
-			echo '<span class="input_error">Błąd serwera! Przepraszamy za niedogodności i prosimy o rejestrację w innym terminie!</span>';
-			echo '<br />Informacja developerska: '.$e;
-		}
-		
 	}
 	
 	
@@ -183,8 +160,7 @@
 				<i class="fa fa-user bg-icon fa-fw single-icon"></i>
 				<input class="input-field" type="text" placeholder="imię" onfocus="this.placeholder=''" onblur="this.placeholder='imię'"
 				value="<?php
-				if (isset($_SESSION['fr_username']))
-				{
+				if (isset($_SESSION['fr_username'])) {
 					echo $_SESSION['fr_username'];
 					unset($_SESSION['fr_username']);
 				}
@@ -196,8 +172,7 @@
 				<i class="fa fa-envelope bg-icon fa-fw single-icon"></i>
 				<input class="input-field" type="text" placeholder="e-mail" onfocus="this.placeholder=''" onblur="this.placeholder='e-mail'" 
 				value="<?php
-					if (isset($_SESSION['fr_email']))
-					{
+					if (isset($_SESSION['fr_email'])) {
 						echo $_SESSION['fr_email'];
 						unset($_SESSION['fr_email']);
 					}
@@ -208,8 +183,7 @@
 				<i class="fa fa-lock bg-icon fa-fw single-icon"></i>
 				<input class="input-field" type="password" placeholder="hasło" onfocus="this.placeholder=''" onblur="this.placeholder='hasło'" 
 				value="<?php
-					if (isset($_SESSION['fr_password1']))
-					{
+					if (isset($_SESSION['fr_password1'])) {
 						echo $_SESSION['fr_password1'];
 						unset($_SESSION['fr_password1']);
 					}
@@ -233,20 +207,21 @@
 				<button type="submit" class="btn">Zarejestruj</button>
 			</div>
 			<?php
-				if (isset($_SESSION['e_username']))
-				{
+				if (isset($_SESSION['e_username'])) {
 					echo '<div class="input_error">'.$_SESSION['e_username'].'</div>';
 					unset($_SESSION['e_username']);
 				}
-				if (isset($_SESSION['e_email']))
-				{
+				if (isset($_SESSION['e_email'])) {
 					echo '<div class="input_error">'.$_SESSION['e_email'].'</div>';
 					unset($_SESSION['e_email']);
 				}
-				if (isset($_SESSION['e_password']))
-				{
+				if (isset($_SESSION['e_password'])) {
 					echo '<div class="input_error">'.$_SESSION['e_password'].'</div>';
 					unset($_SESSION['e_password']);
+				}
+				if (isset($_SESSION['error']))	{
+					echo $_SESSION['error'];
+					unset($_SESSION['error']);
 				}
 				
 			?>
