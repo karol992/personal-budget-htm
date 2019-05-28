@@ -7,6 +7,47 @@
 		exit();
 	}
 	
+/***(START)*LOAD*BALANCE*PERIOD****************************************************************/	
+	$date = new DateTime();
+	//set default balance period
+	if (!isset($_SESSION['balance_start_day']) || 
+	!isset($_SESSION['balance_end_day'])) {
+		$_SESSION['balance_start_day'] = $date->format('Y-m-01');
+		$_SESSION['balance_end_day'] = $date->format('Y-m-t');
+	}
+	//load dropdown balance period
+	if (isset($_POST['balance_period'])) {
+		switch ($_POST['balance_period']) {
+			case 'current_month': 
+				$_SESSION['balance_start_day'] = $date->format('Y-m-01');
+				$_SESSION['balance_end_day'] = $date->format('Y-m-t');
+				break;
+			case 'last_month':
+				$date->modify('-1 month');
+				$_SESSION['balance_start_day'] = $date->format('Y-m-01');
+				$_SESSION['balance_end_day'] = $date->format('Y-m-t');
+				break;
+			case 'current_year': 
+				$_SESSION['balance_start_day'] = $date->format('Y-01-01');
+				$_SESSION['balance_end_day'] = $date->format('Y-12-31');
+				break;
+		}
+		unset($_POST['balance_period']);
+	}
+	//load custom(modal) balance period
+	if(isset($_POST['balance_start_day']) && isset($_POST['balance_end_day'])) {
+		$_SESSION['balance_start_day'] = $_POST['balance_start_day'];
+		$_SESSION['balance_end_day'] = $_POST['balance_end_day'];
+		unset($_POST['balance_start_day']);
+		unset($_POST['balance_end_day']);
+	}
+	//convert period date for ribbon content
+	$startDate = new DateTime($_SESSION['balance_start_day']);
+	$endDate = new DateTime($_SESSION['balance_end_day']);
+	$_SESSION['balance_start_day_ribbon'] = $startDate->format('d.m.Y');
+	$_SESSION['balance_end_day_ribbon'] = $endDate->format('d.m.Y');
+/***(END)*LOAD*BALANCE*PERIOD****************************************************************/	
+
 ?>
 <!DOCTYPE html>
 <html lang="pl">
@@ -35,7 +76,7 @@
 </head>
 
 <body>
-	
+
 	<header>
 		<!-- Logo -->
 		<div class="col-sm-12 logo">
@@ -82,9 +123,10 @@
 						Zakres
 					</button>
 					<div class="dropdown-menu col-lg-2 col-md-3 col-sm-4 col-5" aria-labelledby="dropdownMenu2">
-						<button class="dropdown-item" type="button">Bieżący miesiąc</button>
-						<button class="dropdown-item" type="button">Poprzedni miesiąc</button>
-						<button class="dropdown-item" type="button">Bieżący rok</button>
+							<form action="balance.php" method="post">
+							<button class="dropdown-item" type="submit" name="balance_period" value="current_month">Bieżący miesiąc</button>
+							<button class="dropdown-item" type="submit" name="balance_period" value="last_month">Poprzedni miesiąc</button>
+							<button class="dropdown-item" type="submit" name="balance_period" value="current_year">Bieżący rok</button></form>
 						<button class="dropdown-item" type="button" href="#dateModal" data-toggle="modal" data-target="#dateModal">
 							Niestandardowy
 						</button>			
@@ -96,9 +138,9 @@
 		<div class="info_ribbon"> <!-- Display period of balance -->
 			<div class="inB">Zakres bilansu:</div>
 			<div class="inB">
-				<div class="inB">01.01.2019</div>
+				<div class="inB"><?php echo $_SESSION['balance_start_day_ribbon']; ?></div>
 				<div class="inB"> - </div>
-				<div class="inB">31.01.2019</div>
+				<div class="inB"><?php  echo $_SESSION['balance_end_day_ribbon']; ?></div>
 			</div>
 		</div>
 		
@@ -107,9 +149,10 @@
 			<div class="container"> 
 			
 				<div class="row">
-					
+
 					<div class="col-md-6"> <!-- Incomes categories. -->
 							Przychody
+<!---------------------------------------------------------------->	
 						<div id="income_table">
 							<div class="b_line row shadow">
 								<div class="blcell col-7">Wynagrodzenie</div>
@@ -140,7 +183,7 @@
 								</button>
 							</div>
 						</div>
-						
+<!---------------------------------------------------------------->		
 						Wykres wydatków
 						<div class="b_border shadow"> <!-- Pie chart with expenses. -->
 							<div class="ratioparent">
@@ -152,7 +195,7 @@
 								Legenda
 							</button>
 						</div>
-							
+<!---------------------------------------------------------------->					
 					</div>
 					
 					<div class="col-md-6"> <!-- Expenses categories. -->
@@ -317,31 +360,33 @@
 <!------dateModal----------------------------------------------------------------------------------->	
 	<div class="modal fade" id="dateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog" role="document">
-			<form class="modal-content" action="" method="post" enctype="multipart/form-data">
-				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">Niestandardowy okres</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<section>
-						<div class="container">
-							<div class="row">
-								<label class="offset-1 col-2" for="income_date">Od: </label>
-								<input class="col-7" type="date" name="income_date" value="2019-01-01">
+			<div class="modal-content">
+				<form action="balance.php" method="post" enctype="multipart/form-data">
+					<div class="modal-header">
+						<h5 class="modal-title">Niestandardowy okres</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<section>
+							<div class="container">
+								<div class="row">
+									<label class="offset-1 col-2" for="balance_start_day">Od: </label>
+									<input class="col-7" type="date" name="balance_start_day" value="<?php echo $_SESSION['balance_start_day']; ?>">
+								</div>
+								<div class="row">
+									<label class="offset-1 col-2" for="balance_end_day">Do: </label>
+									<input class="col-7" type="date" name="balance_end_day" value="<?php echo $_SESSION['balance_end_day']; ?>">
+								</div>
 							</div>
-							<div class="row">
-								<label class="offset-1 col-2" for="income_date">Do: </label>
-								<input class="col-7" type="date" name="income_date" value="2019-01-31">
-							</div>
-						</div>
-					</section>
-				</div>
-				<div class="modal-footer">
-					<button type="submit" class="btn btn-balance" data-dismiss="modal" value="Submit">OK</button>
-				</div>
-			</form>
+						</section>
+					</div>
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-balance" value="Submit">OK</button>
+					</div>
+				</form>
+			</div>
 		</div>
 	</div>
 <!------exampleListModal---------------------------------------------------------------------------->	
