@@ -22,14 +22,16 @@
 			$userQuery->execute();
 			$user = $userQuery->fetch();
 			if ($user && password_verify($password, $user['password'])) {
-					$_SESSION['id'] = $user['id'];
-					$_SESSION['username'] = $user['username'];
-					$_SESSION['email'] = $user['email'];
-					unset($_SESSION['login_error']);
-					header('Location: menu.php');
-				}
+				$_SESSION['id'] = $user['id'];
+				$_SESSION['username'] = $user['username'];
+				$_SESSION['email'] = $user['email'];
+				unset($_SESSION['login_error']);
+				header('Location: menu.php');
+			} else {
+				$_SESSION['login_error'] = '<div class="input_error">Nieprawidłowy email lub hasło!</div>';
+				header('Location: index.php');
+				exit();
+			}
 		}
-	} else {
-		header('Location: index.php');
 	}
 ?>
