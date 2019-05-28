@@ -23,12 +23,20 @@
 		}
 		
 		// Check correctness of email 
-		$email = $_POST['email'];
-		$emailB = filter_var($email, FILTER_SANITIZE_EMAIL);
-		
-		if ((filter_var($emailB, FILTER_VALIDATE_EMAIL)==false) || ($emailB!=$email)) {
+		$email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL);
+		$emailB = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
+		if (($emailB!=$email) || !$email) {
 			$correct_flag=false;
 			$_SESSION['e_email']="Podaj poprawny adres e-mail!";
+		} else if ($email){
+			require_once "database.php";
+			$emailQuery = $db->prepare("SELECT email FROM users WHERE email=:email");
+			$emailQuery->bindValue(':email', $email, PDO::PARAM_STR);
+			$emailQuery->execute();
+			if($emailQuery->rowCount()) {
+				$correct_flag=false;
+				$_SESSION['e_email']="Istnieje już konto przypisane do tego adresu e-mail!"; 
+			}
 		}
 		
 		//Check correctness of password
@@ -52,48 +60,34 @@
 		$_SESSION['fr_password1'] = $password1;
 		$_SESSION['fr_password2'] = $password2;
 		
-		require_once "connect.php";
-		mysqli_report(MYSQLI_REPORT_STRICT);
-		
-		try  {
-			$connection = new mysqli($host, $db_user, $db_password, $db_name);
-			if ($connection->connect_errno!=0) {
-				throw new Exception(mysqli_connect_errno());
-			} else {
-				//Whether unique email
-				$check_email = $connection->query("SELECT id FROM users WHERE email='$email'");
-				if (!$check_email) throw new Exception($connection->error);
-				$emails_number = $check_email->num_rows;
-				if($emails_number>0) {
-					$correct_flag=false;
-					$_SESSION['e_email']="Istnieje już konto przypisane do tego adresu e-mail!";
-				}
-				if ($correct_flag==true) {
-					//No validation crashes
-					
-					if (($connection->query("INSERT INTO users VALUES (NULL, '$username', '$password_hash', '$email')"))) {
-						$userid_container=$connection->query("SELECT id FROM users WHERE email='$email'");
-						if(!$userid_container) throw new Exception($connection->error);
-						$userid_var=$userid_container->fetch_assoc();
-						$userid_int=$userid_var['id'];
-						$userid_container->free_result();
-							
-						$connection->query("INSERT INTO payment_methods_assigned_to_users (id, user_id, name) SELECT NULL, $userid_int name FROM payment_methods_default");
-						//$connection->query("INSERT INTO incomes_category_assigned_to_users (id, user_id, name) SELECT NULL, $userid_int, name FROM incomes_category_default");
-						//$connection->query("INSERT INTO expenses_category_assigned_to_users (id, user_id, name) SELECT NULL, $userid_int, name FROM expenses_category_default");
-							
-						$_SESSION['registration_done']=true;
-						header('Location: index.php');
-					} else {
-						throw new Exception($connection->error);
-					}
-				}
-				$connection->close();
-			}
-		} catch(Exception $e) {
-			$_SESSION['error'] = '<div class="input_error">Błąd serwera! Przepraszamy za niedogodności i prosimy o rejestrację w innym terminie!</div>
-			<div>Informacja developerska: '.$e.'</div>';
+		//No validation crashes
+		if ($correct_flag) {
+			require_once "database.php";
+			//add new user to users
+			$registerUser=$db->prepare("INSERT INTO users VALUES (NULL, :username, :password_hash, :email)");
+			$registerUser->bindValue(':username', $username, PDO::PARAM_STR);
+			$registerUser->bindValue(':password_hash', $password_hash, PDO::PARAM_STR);
+			$registerUser->bindValue(':email', $email, PDO::PARAM_STR);
+			$registerUser->execute();
+			
+			//get user id
+			$queryNewUserId=$db->prepare("SELECT id FROM users WHERE email=:email");
+			$queryNewUserId->bindValue(':email', $email, PDO::PARAM_STR);
+			$queryNewUserId->execute();
+			$newUserId=$queryNewUserId->fetch();
+			//copy default categories
+			$copyPayments=$db->prepare("INSERT INTO payment_methods_assigned_to_users (id, user_id, name) SELECT NULL, :newUserId, name FROM payment_methods_default");
+			$copyPayments->bindValue(':newUserId',$newUserId['id'],PDO::PARAM_INT);
+			$copyPayments->execute();
+			$copyIncomes=$db->prepare("INSERT INTO incomes_category_assigned_to_users (id, user_id, name) SELECT NULL, :newUserId, name FROM incomes_category_default");
+			$copyIncomes->bindValue(':newUserId',$newUserId['id'],PDO::PARAM_INT);
+			$copyIncomes->execute();
+			$copyExpenses=$db->prepare("INSERT INTO expenses_category_assigned_to_users (id, user_id, name) SELECT NULL, :newUserId, name FROM expenses_category_default");
+			$copyExpenses->bindValue(':newUserId',$newUserId['id'],PDO::PARAM_INT);
+			$copyExpenses->execute();
+			
 			header('Location: index.php');
+			exit();
 		}
 	}
 	
@@ -170,7 +164,7 @@
 			  
 			 <div class="input-container">
 				<i class="fa fa-envelope bg-icon fa-fw single-icon"></i>
-				<input class="input-field" type="text" placeholder="e-mail" onfocus="this.placeholder=''" onblur="this.placeholder='e-mail'" 
+				<input class="input-field" type="email" placeholder="e-mail" onfocus="this.placeholder=''" onblur="this.placeholder='e-mail'" 
 				value="<?php
 					if (isset($_SESSION['fr_email'])) {
 						echo $_SESSION['fr_email'];
