@@ -22,11 +22,15 @@
 	if (isset($_POST['income_category'])) echo $_POST['income_category'].'<br />';
 	if (isset($_POST['income_note'])) echo $_POST['income_note'].'<br />';*/
 	
+	$_SESSION['income_date']=$_POST['income_date'];
+	
 	$user_id = $_SESSION['id'];
 	$income_value = $_POST['income_value'];
-	$income_date = $_POST['income_date'];
+	$income_date = $_SESSION['income_date'];
 	$income_category = $_POST['income_category'];
 	$income_note = $_POST['income_note'];
+	
+	
 	
 	require_once "database.php";
 	
@@ -45,7 +49,7 @@
 	$categoryName=$queryCategory->fetch();
 	
 	$_SESSION['previousIncome'] = '<div class="info_ribbon">
-		<div class="inB">Dodano +'.$categoryName['name']." ".$income_value.'zł</div>
+		<div class="inB">Dodano '.$categoryName['name']." +".$income_value.'zł</div>
 		<div class="inB"> ('.$income_date.')</div>
 	</div>';
 	header('Location: income.php');

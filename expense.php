@@ -5,7 +5,23 @@
 	if (!isset($_SESSION['id'])) {
 		header('Location: index.php');
 		exit();
+	} 
+	if (!isset($_SESSION['expense_date'])) {
+		$now=new DateTime();
+		$_SESSION['expense_date']=$now->format('Y-m-d');
 	}
+	
+	require_once "database.php";
+	
+	$queryExpenseCategories=$db->prepare("SELECT id, name FROM expenses_category_assigned_to_users WHERE user_id=:id");
+	$queryExpenseCategories->bindValue(':id',$_SESSION['id'],PDO::PARAM_INT);
+	$queryExpenseCategories->execute();
+	$expenseCategories=$queryExpenseCategories->fetchAll();
+	
+	$queryPaymentMethods=$db->prepare("SELECT id, name FROM payment_methods_assigned_to_users WHERE user_id=:id");
+	$queryPaymentMethods->bindValue(':id',$_SESSION['id'],PDO::PARAM_INT);
+	$queryPaymentMethods->execute();
+	$paymentMethods=$queryPaymentMethods->fetchAll();
 	
 ?>
 <!DOCTYPE html>
@@ -72,56 +88,65 @@
 			</div>
 		</nav>
 	</header>
-	
+	<?php 
+	if (isset($_SESSION['previousExpense'])) {
+		echo $_SESSION['previousExpense'];
+		unset($_SESSION['previousExpense']);
+	}
+	?>
 	<main>
 		<!-- Expense adding -->
-		<form class="container offset-xl-3 offset-lg-2 offset-md-1 offset-sm-2 offset-1 col-xl-6 col-lg-8 col-md-10 col-sm-8 col-10" action="" method="post" enctype="multipart/form-data">
+		<form class="container offset-xl-3 offset-lg-2 offset-md-1 offset-sm-2 offset-1 col-xl-6 col-lg-8 col-md-10 col-sm-8 col-10" action="add_expense.php" method="post" enctype="multipart/form-data">
 			<!-- Amount of expense -->
 			<div class="expense_section col-12 col-md-6">
-				<div><label for="expense_price">Kwota: </label></div>
-				<div><input type="number" name="expense_price" step="0.01" value="2000.00" min="0.01" required></div>
+				<div><label for="expense_value">Kwota: </label></div>
+				<div><input type="number" name="expense_value" step="0.01" min="0.01" max="999999.99" required></div>
 			</div>
 			<!-- Date of expense -->
 			<div class="expense_section col-12 col-md-6">
 				<div><label for="expense_date">Data: </label></div>
-				<div><input type="date" name="expense_date" value="2019-01-31"></div>
+				<div><input type="date" name="expense_date" value="<?php
+				echo $_SESSION['expense_date'];
+				?>"></div>
 			</div>
 			<!-- Category of expense -->
 			<div class="expense_section col-12 col-md-6">
 				<div>Kategoria: </div>
 				<select name="expense_category">
-					<option value="1" selected> Jedzenie </option>
-					<option value="2"> Mieszkanie </option>
-					<option value="3"> Transport </option>
-					<option value="4"> Telekomunikacja </option>
-					<option value="5"> Opieka zdrowotna </option>
-					<option value="6"> Ubranie </option>
-					<option value="7"> Higiena </option>
-					<option value="8"> Dzieci </option>
-					<option value="9"> Rozrywka </option>
-					<option value="10"> Wycieczka </option>
-					<option value="11"> Szkolenia </option>
-					<option value="12"> Książki </option>
-					<option value="13"> Oszczędności </option>
-					<option value="14"> Na emeryturę </option>
-					<option value="15"> Spłata długów </option>
-					<option value="16"> Darowizna </option>
-					<option value="17"> Inne wydatki </option>
+					<?php
+						$isFirstIC=true;
+						foreach ($expenseCategories as $expCaty) {
+							if ($isFirstEC) {
+								echo '<option value="'.$expCaty['id'].'" selected> '.$expCaty['name'].' </option>';
+								$isFirstEC=false;
+							} else {
+								echo '<option value="'.$expCaty['id'].'"> '.$expCaty['name'].' </option>';
+							}
+						}
+					?>
 				</select>
 			</div>
 			<!-- Expense payment -->
 			<div class="expense_section col-12 col-md-6">
 				<div>Płatność: </div>
-				<select name="expense_payment">
-					<option value="1" selected> Gotówka </option>
-					<option value="2"> Karta debetowa </option>
-					<option value="3"> Karta kredytowa </option>
+				<select name="payment_category">
+					<?php
+						$isFirstPM=true;
+						foreach ($paymentMethods as $payMet) {
+							if ($isFirstPM) {
+								echo '<option value="'.$payMet['id'].'" selected> '.$payMet['name'].' </option>';
+								$isFirstPM=false;
+							} else {
+								echo '<option value="'.$payMet['id'].'"> '.$payMet['name'].' </option>';
+							}
+						}
+					?>
 				</select>
 			</div>
 			<!-- Expense note -->
 			<div class="expense_section col-12 col-md-6">
 				<label for="expense_note">Notatki: </label>
-				<input type="textarea" id="expense_note" placeholder="Opcjonalnie..." onfocus="this.placeholder=''" onblur="this.placeholder='Opcjonalnie...'">
+				<input type="textarea" name="expense_note" placeholder="Opcjonalnie..." onfocus="this.placeholder=''" onblur="this.placeholder='Opcjonalnie...'" value=""maxlength="100">
 			</div>
 			<!-- Expense saving -->
 			<div class="expense_btn offset-4 offset-md-0 col-4 col-md-3">

@@ -8,7 +8,7 @@
 	} 
 	if (!isset($_SESSION['income_date'])) {
 		$now=new DateTime();
-		$income_date=$now->format('Y-m-d');
+		$_SESSION['income_date']=$now->format('Y-m-d');
 	}
 	
 	require_once "database.php";
@@ -101,14 +101,13 @@
 			<div class="income_section col-12 col-md-6">
 				<div><label for="income_date">Data: </label></div>
 				<div><input type="date" name="income_date" value="<?php
-				echo $income_date;
+				echo $_SESSION['income_date'];
 				?>"></div>
 			</div>
 			<!-- Category of income -->
 			<div class="income_section col-12 col-md-6">
 				<div>Kategoria: </div>
 				<select name="income_category">
-					
 					<?php
 						$isFirstIC=true;
 						foreach ($incomeCategories as $incCaty) {
@@ -119,7 +118,7 @@
 								echo '<option value="'.$incCaty['id'].'"> '.$incCaty['name'].' </option>';
 							}
 						}
-						?>
+					?>
 				</select>
 			</div>
 			<!-- Income note -->
