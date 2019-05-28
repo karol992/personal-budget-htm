@@ -8,25 +8,15 @@
 	} 
 	if (!isset($_SESSION['income_date'])) {
 		$now=new DateTime();
-		$income_date=$now->format('Y-m-d');
+		$_SESSION['income_date']=$now->format('Y-m-d');
 	}
 	
-	require_once "connect.php";
-	mysqli_report(MYSQLI_REPORT_STRICT);
+	require_once "database.php";
 	
-	try {
-		$connection = new mysqli($host, $db_user, $db_password, $db_name);
-		if ($connection->connect_errno!=0) {
-			throw new Exception(mysqli_connect_errno());
-		} else {
-			
-			$connection->close();
-		}
-	} catch(Exception $e) {
-		echo '<div class="input_error">Błąd serwera! Przepraszamy za niedogodności i prosimy o skorzystanie w innym terminie!</div>';
-		echo 'Informacja developerska: '.$e.'</div>';
-		exit();
-	}
+	$queryIncomeCategories=$db->prepare("SELECT id, name FROM incomes_category_assigned_to_users WHERE user_id=:id");
+	$queryIncomeCategories->bindValue(':id',$_SESSION['id'],PDO::PARAM_INT);
+	$queryIncomeCategories->execute();
+	$incomeCategories=$queryIncomeCategories->fetchAll();
 	
 ?>
 <!DOCTYPE html>
@@ -93,36 +83,49 @@
 			</div>
 		</nav>
 	</header>
-	
+	<?php 
+	if (isset($_SESSION['previousIncome'])) {
+		echo $_SESSION['previousIncome'];
+		unset($_SESSION['previousIncome']);
+	}
+	?>
 	<main>
 		<!-- Income adding -->
-		<form class="container offset-xl-3 offset-lg-2 offset-md-1 offset-sm-2 offset-1 col-xl-6 col-lg-8 col-md-10 col-sm-8 col-10" action="" method="post" enctype="multipart/form-data">
+		<form class="container offset-xl-3 offset-lg-2 offset-md-1 offset-sm-2 offset-1 col-xl-6 col-lg-8 col-md-10 col-sm-8 col-10" action="add_income.php" method="post" enctype="multipart/form-data">
 			<!-- Amount of income -->
 			<div class="income_section col-12 col-md-6">
 				<div><label for="income_value">Kwota: </label></div>
-				<div><input type="number" name="income_value" step="0.01" value="2000.00" min="0.01" required></div>
+				<div><input type="number" name="income_value" step="0.01" min="0.01" max="999999.99" required></div>
 			</div>
 			<!-- Date of income -->
 			<div class="income_section col-12 col-md-6">
 				<div><label for="income_date">Data: </label></div>
 				<div><input type="date" name="income_date" value="<?php
-				echo $income_date;
+				echo $_SESSION['income_date'];
 				?>"></div>
 			</div>
 			<!-- Category of income -->
 			<div class="income_section col-12 col-md-6">
 				<div>Kategoria: </div>
 				<select name="income_category">
-					<option value="1" selected> Wynagrodzenie </option>
-					<option value="2"> Odsetki bankowe </option>
-					<option value="3"> Sprzedaż na allegro </option>
-					<option value="4"> Inne </option>
+					<?php
+						$isFirstIC=true;
+						foreach ($incomeCategories as $incCaty) {
+							if ($isFirstIC) {
+								echo '<option value="'.$incCaty['id'].'" selected> '.$incCaty['name'].' </option>';
+								$isFirstIC=false;
+							} else {
+								echo '<option value="'.$incCaty['id'].'"> '.$incCaty['name'].' </option>';
+							}
+						}
+					?>
 				</select>
 			</div>
 			<!-- Income note -->
 			<div class="income_section col-12 col-md-6">
 				<label for="income_note">Notatki: </label>
-				<input type="textarea" id="income_note" placeholder="Opcjonalnie..." onfocus="this.placeholder=''" onblur="this.placeholder='Opcjonalnie...'">
+				<input type="textarea" name="income_note" placeholder="Opcjonalnie..." onfocus="this.placeholder=''" onblur="this.placeholder='Opcjonalnie...'"
+				value="" maxlength="100">
 			</div>
 			<!-- Income saving -->
 			<div class="income_btn offset-4 offset-md-6 col-4 col-md-3">

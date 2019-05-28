@@ -93,7 +93,7 @@
 			
 		</div>
 		
-		<div class="period_ribbon"> <!-- Display period of balance -->
+		<div class="info_ribbon"> <!-- Display period of balance -->
 			<div class="inB">Zakres bilansu:</div>
 			<div class="inB">
 				<div class="inB">01.01.2019</div>
