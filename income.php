@@ -2,8 +2,29 @@
 
 	session_start();
 	
-	if (!isset($_SESSION['logged'])) {
+	if (!isset($_SESSION['id'])) {
 		header('Location: index.php');
+		exit();
+	} 
+	if (!isset($_SESSION['income_date'])) {
+		$now=new DateTime();
+		$income_date=$now->format('Y-m-d');
+	}
+	
+	require_once "connect.php";
+	mysqli_report(MYSQLI_REPORT_STRICT);
+	
+	try {
+		$connection = new mysqli($host, $db_user, $db_password, $db_name);
+		if ($connection->connect_errno!=0) {
+			throw new Exception(mysqli_connect_errno());
+		} else {
+			
+			$connection->close();
+		}
+	} catch(Exception $e) {
+		echo '<div class="input_error">Błąd serwera! Przepraszamy za niedogodności i prosimy o skorzystanie w innym terminie!</div>';
+		echo 'Informacja developerska: '.$e.'</div>';
 		exit();
 	}
 	
@@ -84,7 +105,9 @@
 			<!-- Date of income -->
 			<div class="income_section col-12 col-md-6">
 				<div><label for="income_date">Data: </label></div>
-				<div><input type="date" name="income_date" value="2019-01-31"></div>
+				<div><input type="date" name="income_date" value="<?php
+				echo $income_date;
+				?>"></div>
 			</div>
 			<!-- Category of income -->
 			<div class="income_section col-12 col-md-6">

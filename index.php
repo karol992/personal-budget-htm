@@ -78,7 +78,7 @@
 
 			<div class="input-container">
 				<i class="fa fa-envelope bg-icon fa-fw single-icon"></i>
-				<input class="input-field" type="text" name="email" placeholder="e-mail" onfocus="this.placeholder=''" onblur="this.placeholder='e-mail'">
+				<input class="input-field" type="email" name="email" placeholder="e-mail" onfocus="this.placeholder=''" onblur="this.placeholder='e-mail'">
 			</div>
 
 			<div class="input-container">
@@ -90,8 +90,10 @@
 				<i class="fa fa-sign-in fa-fw submit-icon"></i>
 				<button type="submit" class="btn">Zaloguj</button>
 			</div>
-				<?php
-					if (isset($_SESSION['error']))	echo $_SESSION['error'];
+				<?php 
+					if (isset($_SESSION['login_error'])) {
+						echo $_SESSION['login_error']; unset($_SESSION['login_error']);
+					}
 					if (isset($_SESSION['registration_done'])) {
 						echo "<div>Rejestracja powiodła się! Możesz się zalogować.</div>";
 						unset($_SESSION['registration_done']);

@@ -79,7 +79,7 @@
 						$userid_container->free_result();
 							
 						$connection->query("INSERT INTO payment_methods_assigned_to_users (id, user_id, name) SELECT NULL, $userid_int name FROM payment_methods_default");
-						//$connection->query("INSERT INTO incomes_category_assigned_to_users (id, user_id, name) SELECT NULL, $userid_int, name FROM incomes_category_default");
+						$connection->query("INSERT INTO incomes_category_assigned_to_users (id, user_id, name) SELECT NULL, $userid_int, name FROM incomes_category_default");
 						//$connection->query("INSERT INTO expenses_category_assigned_to_users (id, user_id, name) SELECT NULL, $userid_int, name FROM expenses_category_default");
 							
 						$_SESSION['registration_done']=true;
