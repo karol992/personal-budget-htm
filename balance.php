@@ -133,8 +133,10 @@
 		}
 		unset($key);
 	}
-	
-	//echo "<br />";
+
+/***PIE*CHART****************************************************************/		
+//$expenses_json = json_encode($expenses);
+
 ?>
 <!DOCTYPE html>
 <html lang="pl">
@@ -241,9 +243,12 @@
 							Przychody	
 						<div id="income_table"><!-- Incomes categories. -->
 							<?php
+								$totalIncome=(float)0;
 								foreach($incomes as $inc) {
+									
 									$incomeName=$inc['name'];
 									$incomeSumValue=number_format((float)$inc['SUM(ic.amount)'], 2, '.', ''); //always show 2 decimal places
+									$totalIncome+=$incomeSumValue;
 echo <<<END
 							<div class="b_line row shadow">
 								<div class="blcell col-7">$incomeName</div>
@@ -275,9 +280,11 @@ END;
 						Wydatki:
 						<div id="expense_table"><!-- Expenses categories. -->
 							<?php
+								$totalExpense=(float)0;
 								foreach($expenses as $ex) {
 									$expenseName=$ex['name'];
 									$expenseSumValue=number_format((float)$ex['SUM(ex.amount)'], 2, '.', ''); //always show 2 decimal places
+									$totalExpense+=$expenseSumValue;
 echo <<<END
 							<div class="b_line row shadow">
 								<div class="blcell col-7">$expenseName</div>
@@ -307,14 +314,29 @@ END;
 					<div class="col-md-6">
 						<div class="b_line b_sum row shadow">
 							<div class="blcell col-7">Bilans</div>
-							<div class="brcell col-5">1897.91</div>
+							<div class="brcell col-5"><?php				
+								$total=$totalIncome-$totalExpense;
+								echo number_format((float)($total), 2, '.', ''); 
+							?></div>
 						</div>
 					</div>
 					
 					<div class="col-md-6">
 						<div class="b_line b_motivation shadow">
+							<?php
+							if ($total>=0) {
+echo <<<END
 							<div class="inB"><span>Gratulacje. </span></div>
 							<div class="inB"><span>Świetnie zarządzasz finansami!</span></div>
+END;
+							} else {
+echo <<<END
+							<div class="inB" style="color:red"><span>Uważaj, </span></div>
+							<div class="inB" style="color:red"><span>wpadasz w długi!</span></div>
+END;
+							}
+							?>
+							
 						</div>
 					</div>
 				
