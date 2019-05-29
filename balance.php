@@ -6,15 +6,16 @@
 		header('Location: index.php');
 		exit();
 	}
-	
-/***(START)*LOAD*BALANCE*PERIOD****************************************************************/	
+/****LOAD*BALANCE*PERIOD****************************************************************/	
 	$date = new DateTime();
+	
 	//set default balance period
 	if (!isset($_SESSION['balance_start_day']) || 
 	!isset($_SESSION['balance_end_day'])) {
 		$_SESSION['balance_start_day'] = $date->format('Y-m-01');
 		$_SESSION['balance_end_day'] = $date->format('Y-m-t');
 	}
+	
 	//load dropdown balance period
 	if (isset($_POST['balance_period'])) {
 		switch ($_POST['balance_period']) {
@@ -34,6 +35,7 @@
 		}
 		unset($_POST['balance_period']);
 	}
+	
 	//load custom(modal) balance period
 	if(isset($_POST['balance_start_day']) && isset($_POST['balance_end_day'])) {
 		$_SESSION['balance_start_day'] = $_POST['balance_start_day'];
@@ -41,13 +43,78 @@
 		unset($_POST['balance_start_day']);
 		unset($_POST['balance_end_day']);
 	}
+	
 	//convert period date for ribbon content
 	$startDate = new DateTime($_SESSION['balance_start_day']);
 	$endDate = new DateTime($_SESSION['balance_end_day']);
 	$_SESSION['balance_start_day_ribbon'] = $startDate->format('d.m.Y');
 	$_SESSION['balance_end_day_ribbon'] = $endDate->format('d.m.Y');
-/***(END)*LOAD*BALANCE*PERIOD****************************************************************/	
-
+/***LOAD*INCOME*SUMS****************************************************************/	
+	require_once "database.php";
+	
+	//load sums of incomes in incomes_category_assigned_to_users
+	$queryIncomes=$db->prepare("
+	SELECT icat.name, SUM(ic.amount)
+	FROM incomes ic
+	INNER JOIN incomes_category_assigned_to_users icat
+	ON ic.income_category_assigned_to_user_id = icat.id
+	AND (ic.date_of_income BETWEEN :start AND :end)
+	AND icat.id IN (
+		SELECT icat.id FROM incomes_category_assigned_to_users icat
+		INNER JOIN users
+		ON users.id = icat.user_id
+		AND users.id = :id
+	)
+	GROUP BY icat.id
+	ORDER BY SUM(ic.amount) DESC;");
+	$queryIncomes->bindValue(':start',$_SESSION['balance_start_day'],PDO::PARAM_STR);
+	$queryIncomes->bindValue(':end',$_SESSION['balance_end_day'],PDO::PARAM_STR);
+	$queryIncomes->bindValue(':id',$_SESSION['id'],PDO::PARAM_INT);
+	$queryIncomes->execute();
+	$incomes=$queryIncomes->fetchAll();
+	
+	//load all incomes_category_assigned_to_users
+	$queryIncomeCategories=$db->prepare("
+	SELECT name FROM incomes_category_assigned_to_users icat
+	INNER JOIN users
+	ON users.id = icat.user_id
+	AND users.id = :id");
+	$queryIncomeCategories->bindValue(':id',$_SESSION['id'],PDO::PARAM_INT);
+	$queryIncomeCategories->execute();
+	$incomeCategories=$queryIncomeCategories->fetchAll();
+	
+	//fill incomes with zero sums
+	foreach($incomeCategories as $ic) {
+		$key = array_search($ic['name'], array_column($incomes, 'name')); //search the $incomes for a every incomes_category_assigned_to_users
+		if(strlen((string)$key)==0) { //that way because of [0] in array; isset, isnull, empty are useless here
+			$temp_array=array( 'name' => $ic['name'], 0=> $ic['name'] ,'SUM(ic.amount)' => 0.00,  1=> 0.00 );
+			array_push($incomes, $temp_array);
+		}
+		unset($key);
+	}
+	
+	/*echo "<br />";
+	echo "<br />";
+	echo "<br />";
+	$temp_array=array( 'name' => $ic['name'], 0=> $ic['name'], 'SUM(ic.amount)' => 0.00,  1=> 0.00 );
+	print_r($temp_array);
+	exit();*/
+	
+	
+	/*$arr=array(0=>array('ID'=>1, 'name'=>"Smith"), 1=>array('ID'=>2, 'name'=>"John"));
+	Array ( [0] => Array ( [name] => Salary [0] => Salary [SUM(ic.amount)] => 1004.00 [1] => 1004.00 ) [1] => Array ( [name] => Another [0] => Another [SUM(ic.amount)] => 4.00 [1] => 4.00 ) [2] => Array ( [name] => Allegro [0] => Allegro [SUM(ic.amount)] => 3.00 [1] => 3.00 ) [3] => Array ( [name] => Interest [0] => Interest [SUM(ic.amount)] => 2.00 [1] => 2.00 ) )
+	
+	
+	foreach($incomeCategories as $arr)
+	{
+		if(in_array($arr.['name'],$incomes))
+		{
+		   echo "Yes found.. and the correspoding key is ".key($incomes)." and the employee is ".$arr['name'];
+		}
+	}*/
+	
+	
+	//echo "<br />";
 ?>
 <!DOCTYPE html>
 <html lang="pl">
@@ -154,34 +221,21 @@
 							Przychody
 <!---------------------------------------------------------------->	
 						<div id="income_table">
+							<?php
+								foreach($incomes as $inc) {
+									$incomeName=$inc['name'];
+									$incomeSumValue=number_format((float)$inc['SUM(ic.amount)'], 2, '.', ''); //always show 2 decimal places
+echo <<<END
 							<div class="b_line row shadow">
-								<div class="blcell col-7">Wynagrodzenie</div>
-								<div class="brcell col-4">5642.00</div>
+								<div class="blcell col-7">$incomeName</div>
+								<div class="brcell col-4">$incomeSumValue</div>
 								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
 									<span class="fa fa-file-text-o"></span>
 								</button>
 							</div>
-							<div class="b_line row shadow">
-								<div class="blcell col-7">Odsetki bankowe</div>
-								<div class="brcell col-4">0.18</div>
-								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-									<span class="fa fa-file-text-o"></span>
-								</button>
-							</div>
-							<div class="b_line row shadow">
-								<div class="blcell col-7">Sprzedaż na allegro</div>
-								<div class="brcell col-4">50.00</div>
-								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-									<span class="fa fa-file-text-o"></span>
-								</button>
-							</div>
-							<div class="b_line row shadow">
-								<div class="blcell col-7">Inne</div>
-								<div class="brcell col-4">0.00</div>
-								<button class="btn btn_list col-1" href="#legendModal" data-toggle="modal" data-target="#legendModal">
-									<span class="fa fa-file-text-o"></span>
-								</button>
-							</div>
+END;
+								}
+							?>
 						</div>
 <!---------------------------------------------------------------->		
 						Wykres wydatków
