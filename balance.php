@@ -83,36 +83,56 @@
 	$queryIncomeCategories->execute();
 	$incomeCategories=$queryIncomeCategories->fetchAll();
 	
-	//fill incomes with zero sums
+	//fill incomes with zero sums, <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<IT WAS HARD TO SOLVE
 	foreach($incomeCategories as $ic) {
 		$key = array_search($ic['name'], array_column($incomes, 'name')); //search the $incomes for a every incomes_category_assigned_to_users
-		if(strlen((string)$key)==0) { //that way because of [0] in array; isset, isnull, empty are useless here
+		if(strlen((string)$key)==0) { //that way because of [0] in array; isset, isnull, empty was useless here
 			$temp_array=array( 'name' => $ic['name'], 0=> $ic['name'] ,'SUM(ic.amount)' => 0.00,  1=> 0.00 );
 			array_push($incomes, $temp_array);
 		}
 		unset($key);
 	}
+/***LOAD*EXPENSE*SUMS****************************************************************/		
+	//load sums of expenses in expenses_category_assigned_to_users
+	$queryExpenses=$db->prepare("
+	SELECT ecat.name, SUM(ex.amount)
+	FROM expenses ex
+	INNER JOIN expenses_category_assigned_to_users ecat
+	ON ex.expense_category_assigned_to_user_id = ecat.id
+	AND (ex.date_of_expense BETWEEN :start AND :end)
+	AND ecat.id IN (
+		SELECT ecat.id FROM expenses_category_assigned_to_users ecat
+		INNER JOIN users
+		ON users.id = ecat.user_id
+		AND users.id = :id
+	)
+	GROUP BY ecat.id
+	ORDER BY SUM(ex.amount) DESC;");
+	$queryExpenses->bindValue(':start',$_SESSION['balance_start_day'],PDO::PARAM_STR);
+	$queryExpenses->bindValue(':end',$_SESSION['balance_end_day'],PDO::PARAM_STR);
+	$queryExpenses->bindValue(':id',$_SESSION['id'],PDO::PARAM_INT);
+	$queryExpenses->execute();
+	$expenses=$queryExpenses->fetchAll();
 	
-	/*echo "<br />";
-	echo "<br />";
-	echo "<br />";
-	$temp_array=array( 'name' => $ic['name'], 0=> $ic['name'], 'SUM(ic.amount)' => 0.00,  1=> 0.00 );
-	print_r($temp_array);
-	exit();*/
+	//load all expenses_category_assigned_to_users
+	$queryExpenseCategories=$db->prepare("
+	SELECT name FROM expenses_category_assigned_to_users ecat
+	INNER JOIN users
+	ON users.id = ecat.user_id
+	AND users.id = :id");
+	$queryExpenseCategories->bindValue(':id',$_SESSION['id'],PDO::PARAM_INT);
+	$queryExpenseCategories->execute();
+	$expenseCategories=$queryExpenseCategories->fetchAll();
 	
-	
-	/*$arr=array(0=>array('ID'=>1, 'name'=>"Smith"), 1=>array('ID'=>2, 'name'=>"John"));
-	Array ( [0] => Array ( [name] => Salary [0] => Salary [SUM(ic.amount)] => 1004.00 [1] => 1004.00 ) [1] => Array ( [name] => Another [0] => Another [SUM(ic.amount)] => 4.00 [1] => 4.00 ) [2] => Array ( [name] => Allegro [0] => Allegro [SUM(ic.amount)] => 3.00 [1] => 3.00 ) [3] => Array ( [name] => Interest [0] => Interest [SUM(ic.amount)] => 2.00 [1] => 2.00 ) )
-	
-	
-	foreach($incomeCategories as $arr)
-	{
-		if(in_array($arr.['name'],$incomes))
-		{
-		   echo "Yes found.. and the correspoding key is ".key($incomes)." and the employee is ".$arr['name'];
+//fill expenses with zero sums, <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<IT WAS HARD TO SOLVE
+	foreach($expenseCategories as $ec) {
+		$key = array_search($ec['name'], array_column($expenses, 'name')); //search the $expenses for a every expenses_category_assigned_to_users
+		if(strlen((string)$key)==0) { //that way because of [0] in array; isset, isnull, empty was useless here
+			$temp_array=array( 'name' => $ec['name'], 0=> $ec['name'] ,'SUM(ex.amount)' => 0.00,  1=> 0.00 );
+			array_push($expenses, $temp_array);
 		}
-	}*/
-	
+		unset($key);
+	}
 	
 	//echo "<br />";
 ?>
@@ -217,10 +237,9 @@
 			
 				<div class="row">
 
-					<div class="col-md-6"> <!-- Incomes categories. -->
-							Przychody
-<!---------------------------------------------------------------->	
-						<div id="income_table">
+					<div class="col-md-6"> 
+							Przychody	
+						<div id="income_table"><!-- Incomes categories. -->
 							<?php
 								foreach($incomes as $inc) {
 									$incomeName=$inc['name'];
@@ -237,7 +256,7 @@ END;
 								}
 							?>
 						</div>
-<!---------------------------------------------------------------->		
+	
 						Wykres wydatków
 						<div class="b_border shadow"> <!-- Pie chart with expenses. -->
 							<div class="ratioparent">
@@ -249,131 +268,27 @@ END;
 								Legenda
 							</button>
 						</div>
-<!---------------------------------------------------------------->					
+		
 					</div>
 					
-					<div class="col-md-6"> <!-- Expenses categories. -->
+					<div class="col-md-6"> 
 						Wydatki:
-						<div id="expense_table">
+						<div id="expense_table"><!-- Expenses categories. -->
+							<?php
+								foreach($expenses as $ex) {
+									$expenseName=$ex['name'];
+									$expenseSumValue=number_format((float)$ex['SUM(ex.amount)'], 2, '.', ''); //always show 2 decimal places
+echo <<<END
 							<div class="b_line row shadow">
-								<div class="blcell col-7">Jedzenie</div>
-								<div class="brcell col-4">623.12</div>
+								<div class="blcell col-7">$expenseName</div>
+								<div class="brcell col-4">$expenseSumValue</div>
 								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
 									<span class="fa fa-file-text-o"></span>
 								</button>
 							</div>
-							<div class="b_line row shadow">
-								<div class="blcell col-7">Mieszkanie</div>
-								<div class="brcell col-4">1450.00</div>
-								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-									<span class="fa fa-file-text-o"></span>
-								</button>
-							</div>
-							<div class="b_line row shadow">
-								<div class="blcell col-7">Transport</div>
-								<div class="brcell col-4">412.35</div>
-								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-									<span class="fa fa-file-text-o"></span>
-								</button>
-							</div>
-							<div class="b_line row shadow">
-								<div class="blcell col-7">Telekomunikacja</div>
-								<div class="brcell col-4">140.00</div>
-								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-									<span class="fa fa-file-text-o"></span>
-								</button>
-							</div>
-							<div class="b_line row shadow">
-								<div class="blcell col-7">Opieka zdrowotna</div>
-								<div class="brcell col-4">20.00</div>
-								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-									<span class="fa fa-file-text-o"></span>
-								</button>
-							</div>
-							<div class="b_line row shadow">
-								<div class="blcell col-7">Ubranie</div>
-								<div class="brcell col-4">120.00</div>
-								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-									<span class="fa fa-file-text-o"></span>
-								</button>
-							</div>
-							<div class="b_line row shadow">
-								<div class="blcell col-7">Higiena</div>
-								<div class="brcell col-4">29.80</div>
-								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-									<span class="fa fa-file-text-o"></span>
-								</button>
-							</div>
-							<div class="b_line row shadow">
-								<div class="blcell col-7">Dzieci</div>
-								<div class="brcell col-4">0.00</div>
-								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-									<span class="fa fa-file-text-o"></span>
-								</button>
-							</div>
-							<div class="b_line row shadow">
-								<div class="blcell col-7">Rozrywka</div>
-								<div class="brcell col-4">151.00</div>
-								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-									<span class="fa fa-file-text-o"></span>
-								</button>
-							</div>
-							<div class="b_line row shadow">
-								<div class="blcell col-7">Wycieczka</div>
-								<div class="brcell col-4">650.00</div>
-								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-									<span class="fa fa-file-text-o"></span>
-								</button>
-							</div>
-							<div class="b_line row shadow">
-								<div class="blcell col-7">Szkolenia</div>
-								<div class="brcell col-4">0.00</div>
-								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-									<span class="fa fa-file-text-o"></span>
-								</button>
-							</div>
-							<div class="b_line row shadow">
-								<div class="blcell col-7">Książki</div>
-								<div class="brcell col-4">99.00</div>
-								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-									<span class="fa fa-file-text-o"></span>
-								</button>
-							</div>
-							<div class="b_line row shadow">
-								<div class="blcell col-7">Oszczędności</div>
-								<div class="brcell col-4">0.00</div>
-								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-									<span class="fa fa-file-text-o"></span>
-								</button>
-							</div>
-							<div class="b_line row shadow">
-								<div class="blcell col-7">Emertytura</div>
-								<div class="brcell col-4">0.00</div>
-								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-									<span class="fa fa-file-text-o"></span>
-								</button>
-							</div>
-							<div class="b_line row shadow">
-								<div class="blcell col-7">Spłata długów</div>
-								<div class="brcell col-4">0.00</div>
-								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-									<span class="fa fa-file-text-o"></span>
-								</button>
-							</div>
-							<div class="b_line row shadow">
-								<div class="blcell col-7">Darowizna</div>
-								<div class="brcell col-4">55.00</div>
-								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-									<span class="fa fa-file-text-o"></span>
-								</button>
-							</div>
-							<div class="b_line row shadow">
-								<div class="blcell col-7">Inne wydatki</div>
-								<div class="brcell col-4">44.00</div>
-								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-									<span class="fa fa-file-text-o"></span>
-								</button>
-							</div>
+END;
+								}
+							?>
 						</div>
 					</div>
 					 
