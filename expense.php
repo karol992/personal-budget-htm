@@ -114,14 +114,8 @@
 				<div>Kategoria: </div>
 				<select name="expense_category">
 					<?php
-						$isFirstIC=true;
 						foreach ($expenseCategories as $expCaty) {
-							if ($isFirstEC) {
-								echo '<option value="'.$expCaty['id'].'" selected> '.$expCaty['name'].' </option>';
-								$isFirstEC=false;
-							} else {
-								echo '<option value="'.$expCaty['id'].'"> '.$expCaty['name'].' </option>';
-							}
+							echo '<option value="'.$expCaty['id'].'"> '.$expCaty['name'].' </option>';
 						}
 					?>
 				</select>

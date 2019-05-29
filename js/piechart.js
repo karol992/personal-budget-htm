@@ -16,9 +16,19 @@ am4core.useTheme(am4themes_kelly);
 // Create chart instance
 var chart = am4core.create("chartdiv", am4charts.PieChart);
 
+var name1 = "Jedzenie";
+
+//expenses.length
+var step;
+for (step=0; step<expenses.length; step++) {
+	chart.data.push({"category": expenses[step].name, "value": expenses[step].eSum});
+}
+
+
+/*
 // Add data
 chart.data = [{
-  "category": "Jedzenie",
+  "category": expenses[0].name,
   "value": 623.12
 }, {
   "category": "Mieszanie",
@@ -53,7 +63,7 @@ chart.data = [{
 }, {
   "category": "Inne wydatki",
   "value": 44.00
-}];
+}];*/
 
 // Add and configure Series
 var pieSeries = chart.series.push(new am4charts.PieSeries());
