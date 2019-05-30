@@ -93,9 +93,9 @@
 		unset($key);
 	}
 /***LOAD*EXPENSE*SUMS****************************************************************/		
-	//load sums of expenses in expenses_category_assigned_to_users
+	//load sums of expenses in expenses_category_assigned_to_users   //below: , ecat.id
 	$queryExpenses=$db->prepare("
-	SELECT ecat.name, SUM(ex.amount) eSum
+	SELECT ecat.name, ecat.id, SUM(ex.amount) eSum
 	FROM expenses ex
 	INNER JOIN expenses_category_assigned_to_users ecat
 	ON ex.expense_category_assigned_to_user_id = ecat.id
@@ -115,9 +115,9 @@
 	$expenses=$queryExpenses->fetchAll();
 	$preExpenses=$expenses;
 	
-	//load all expenses_category_assigned_to_users
+	//load all expenses_category_assigned_to_users                //below: ecat.name, ecat.id
 	$queryExpenseCategories=$db->prepare("
-	SELECT name FROM expenses_category_assigned_to_users ecat
+	SELECT ecat.name ename, ecat.id eid FROM expenses_category_assigned_to_users ecat
 	INNER JOIN users
 	ON users.id = ecat.user_id
 	AND users.id = :id");
@@ -127,9 +127,10 @@
 	
 //fill expenses with zero sums, <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<IT WAS HARD TO SOLVE
 	foreach($expenseCategories as $ec) {
-		$key = array_search($ec['name'], array_column($expenses, 'name')); //search the $expenses for a every expenses_category_assigned_to_users
+		$key = array_search($ec['ename'], array_column($expenses, 'name')); //search the $expenses for a every expenses_category_assigned_to_users
 		if(strlen((string)$key)==0) { //that way because of [0] in array; isset, isnull, empty was useless here
-			$temp_array=array( 'name' => $ec['name'], 0=> $ec['name'] ,'eSum' => 0.00,  1=> 0.00 );
+			//below: ,'id' => $ec['id'], 1=> $ec['id']  AND  1=> 0.00 INTO 2=> 0.00
+			$temp_array=array( 'name' => $ec['ename'], 0=> $ec['ename'], 'id' => $ec['eid'], 1=> $ec['eid'], 'eSum' => 0.00,  1=> 0.00 );
 			array_push($expenses, $temp_array);
 		}
 		unset($key);
@@ -163,6 +164,14 @@
 </head>
 
 <body>
+<!--
+		<form action="#" method="post">
+            <input type="number" name="price"> <br>
+            <input type="number" name="qty"><br>
+            <input type="submit" name="SubmitButton">
+        </form>
+        <?php //if(isset($message)) echo "The Answer is " .$message; ?>
+-->
 
 	<header>
 		<!-- Logo -->
@@ -256,6 +265,7 @@ echo <<<END
 								</button>
 							</div>
 END;
+							
 								}
 							?>
 						</div>
@@ -283,17 +293,21 @@ END;
 									$expenseName=$ex['name'];
 									$expenseSumValue=number_format((float)$ex['eSum'], 2, '.', ''); //always show 2 decimal places
 									$totalExpense+=$expenseSumValue;
+									$expenseCategoryID=$ex['id']; //<<<<<<<<<<<<<<<<<<<<<<< BELOW: IT WAS HARD TO SOLVE/FIND
 echo <<<END
 							<div class="b_line row shadow">
 								<div class="blcell col-7">$expenseName</div>
 								<div class="brcell col-4">$expenseSumValue</div>
-								<button class="btn btn_list col-1" href="#expenseListModal" data-toggle="modal" data-target="#expenseListModal">
+								<button class="btn btn_list col-1" href="#expenseListModal$expenseCategoryID" data-toggle="modal" data-target="#expenseListModal$expenseCategoryID">
 									<span class="fa fa-file-text-o"></span>
 								</button>
+								
 							</div>
 END;
 								}
 							?>
+							
+							
 						</div>
 					</div>
 					 
@@ -413,37 +427,37 @@ END;
 			</form>
 		</div>
 	</div>
-	<!------expenseListModal---------------------------------------------------------------------------->	
-	<div class="modal fade" id="expenseListModal" tabindex="-1" role="dialog" aria-labelledby="listModalLabel" aria-hidden="true">
+	<!------expenseListModal-------------------------------------------->
+<?php
+	foreach($expenses as $ex) {
+		$expenseName=$ex['name'];
+		$expenseSumValue=number_format((float)$ex['eSum'], 2, '.', ''); //always show 2 decimal places
+		$expenseCategoryID=$ex['id'];
+		
+		$tempCategory=$expenseName;
+
+echo <<<END
+	<div class="modal fade" id="expenseListModal$expenseCategoryID" tabindex="-1" role="dialog" aria-labelledby="listModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg" role="document">
 			<form class="modal-content" action="" method="post" enctype="multipart/form-data">
 				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">Szczegółowa lista</h5>
+					<div class="modal-title" id="expenseModalLabel$expenseCategoryID">$expenseName</div>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
 				<div class="modal-body">
 					<section>
-					<?php
-					
-					?>
-						<div>Nazwa kategorii</div>
+						<h5>Szczegółowa lista</h5>
 						<div class="container">
-								<div class="modal_line row shadow">
-									<input type="number" class="modal_cell col-12 col-sm-6 col-lg-3" step="0.01" value="2001.00" min="0.01">
-									<input type="date" class="modal_cell col-12 col-sm-6 col-lg-3" value="2019-01-31">
-									<input type="text" class="modal_cell col-12 col-lg-6" placeholder="Notatki..." onfocus="this.placeholder=''Notatki..." onblur="this.placeholder='Notatki...'" value="">
-								</div>
-						</div>
-						<?php
-						$tempValue="2001.00";
-						$tempDate="2019-01-31";
-						$tempCategory="Kategoria";
-						$tempPayment="Payment";
-						$tempComment="";
+END;
+		
+		if (1) {
+			$tempValue="2001.00";
+			$tempDate="2019-01-31";
+			$tempPayment="Payment";
+			$tempComment="";
 echo <<<END
-						<div class="container">
 								<div class="modal_line row shadow">
 									<input type="number" class="modal_cell col-6 col-sm-4 col-lg-2" step="0.01" value="$tempValue" min="0.01">
 									<input type="date" class="modal_cell col-6 col-sm-4 col-lg-3" value="$tempDate">
@@ -455,9 +469,11 @@ echo <<<END
 										<button class="btn_settings bg_del modal_button" type="submit" value="Submit">X</button>
 									</div>
 								</div>
-						</div>
 END;
-						?>
+		 
+		}
+echo <<<END
+						</div>
 					</section>
 				</div>
 				<div class="modal-footer">
@@ -466,6 +482,12 @@ END;
 			</form>
 		</div>
 	</div>
+END;
+
+	}
+?>	
+	
+	
 <!---legendModal------------------------------------------------------------------------------------------>
 	<div class="modal fade" id="legendModal" tabindex="-1" role="dialog" aria-labelledby="legendModalLabel" aria-hidden="true">
 		<div class="modal-dialog" role="document">
