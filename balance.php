@@ -54,7 +54,7 @@
 	
 	//load sums of incomes in incomes_category_assigned_to_users
 	$queryIncomes=$db->prepare("
-	SELECT icat.name, SUM(ic.amount)
+	SELECT icat.name, SUM(ic.amount) iSum
 	FROM incomes ic
 	INNER JOIN incomes_category_assigned_to_users icat
 	ON ic.income_category_assigned_to_user_id = icat.id
@@ -66,7 +66,7 @@
 		AND users.id = :id
 	)
 	GROUP BY icat.id
-	ORDER BY SUM(ic.amount) DESC;");
+	ORDER BY iSum DESC;");
 	$queryIncomes->bindValue(':start',$_SESSION['balance_start_day'],PDO::PARAM_STR);
 	$queryIncomes->bindValue(':end',$_SESSION['balance_end_day'],PDO::PARAM_STR);
 	$queryIncomes->bindValue(':id',$_SESSION['id'],PDO::PARAM_INT);
@@ -87,7 +87,7 @@
 	foreach($incomeCategories as $ic) {
 		$key = array_search($ic['name'], array_column($incomes, 'name')); //search the $incomes for a every incomes_category_assigned_to_users
 		if(strlen((string)$key)==0) { //that way because of [0] in array; isset, isnull, empty was useless here
-			$temp_array=array( 'name' => $ic['name'], 0=> $ic['name'] ,'SUM(ic.amount)' => 0.00,  1=> 0.00 );
+			$temp_array=array( 'name' => $ic['name'], 0=> $ic['name'] ,'iSum' => 0.00,  1=> 0.00 );
 			array_push($incomes, $temp_array);
 		}
 		unset($key);
@@ -95,7 +95,7 @@
 /***LOAD*EXPENSE*SUMS****************************************************************/		
 	//load sums of expenses in expenses_category_assigned_to_users
 	$queryExpenses=$db->prepare("
-	SELECT ecat.name, SUM(ex.amount)
+	SELECT ecat.name, SUM(ex.amount) eSum
 	FROM expenses ex
 	INNER JOIN expenses_category_assigned_to_users ecat
 	ON ex.expense_category_assigned_to_user_id = ecat.id
@@ -107,12 +107,13 @@
 		AND users.id = :id
 	)
 	GROUP BY ecat.id
-	ORDER BY SUM(ex.amount) DESC;");
+	ORDER BY eSum DESC;");
 	$queryExpenses->bindValue(':start',$_SESSION['balance_start_day'],PDO::PARAM_STR);
 	$queryExpenses->bindValue(':end',$_SESSION['balance_end_day'],PDO::PARAM_STR);
 	$queryExpenses->bindValue(':id',$_SESSION['id'],PDO::PARAM_INT);
 	$queryExpenses->execute();
 	$expenses=$queryExpenses->fetchAll();
+	$preExpenses=$expenses;
 	
 	//load all expenses_category_assigned_to_users
 	$queryExpenseCategories=$db->prepare("
@@ -128,14 +129,11 @@
 	foreach($expenseCategories as $ec) {
 		$key = array_search($ec['name'], array_column($expenses, 'name')); //search the $expenses for a every expenses_category_assigned_to_users
 		if(strlen((string)$key)==0) { //that way because of [0] in array; isset, isnull, empty was useless here
-			$temp_array=array( 'name' => $ec['name'], 0=> $ec['name'] ,'SUM(ex.amount)' => 0.00,  1=> 0.00 );
+			$temp_array=array( 'name' => $ec['name'], 0=> $ec['name'] ,'eSum' => 0.00,  1=> 0.00 );
 			array_push($expenses, $temp_array);
 		}
 		unset($key);
 	}
-
-/***PIE*CHART****************************************************************/		
-//$expenses_json = json_encode($expenses);
 
 ?>
 <!DOCTYPE html>
@@ -247,7 +245,7 @@
 								foreach($incomes as $inc) {
 									
 									$incomeName=$inc['name'];
-									$incomeSumValue=number_format((float)$inc['SUM(ic.amount)'], 2, '.', ''); //always show 2 decimal places
+									$incomeSumValue=number_format((float)$inc['iSum'], 2, '.', ''); //always show 2 decimal places
 									$totalIncome+=$incomeSumValue;
 echo <<<END
 							<div class="b_line row shadow">
@@ -283,7 +281,7 @@ END;
 								$totalExpense=(float)0;
 								foreach($expenses as $ex) {
 									$expenseName=$ex['name'];
-									$expenseSumValue=number_format((float)$ex['SUM(ex.amount)'], 2, '.', ''); //always show 2 decimal places
+									$expenseSumValue=number_format((float)$ex['eSum'], 2, '.', ''); //always show 2 decimal places
 									$totalExpense+=$expenseSumValue;
 echo <<<END
 							<div class="b_line row shadow">
@@ -392,28 +390,11 @@ END;
 				</div>
 				<div class="modal-body">
 					<section>
+					<?php
+					
+					?>
 						<div>Nazwa kategorii</div>
 						<div class="container">
-								<div class="modal_line row shadow">
-									<input type="number" class="modal_cell col-12 col-sm-6 col-lg-3" step="0.01" value="2000.00" min="0.01">
-									<input type="date" class="modal_cell col-12 col-sm-6 col-lg-3" value="2019-01-31">
-									<input type="text" class="modal_cell col-12 col-lg-6" placeholder="Notatki..." onfocus="this.placeholder=''Notatki..." onblur="this.placeholder='Notatki...'" value="">
-								</div>
-								<div class="modal_line row shadow">
-									<input type="number" class="modal_cell col-12 col-sm-6 col-lg-3" step="0.01" value="2000.00" min="0.01">
-									<input type="date" class="modal_cell col-12 col-sm-6 col-lg-3" value="2019-01-31">
-									<input type="text" class="modal_cell col-12 col-lg-6" placeholder="Notatki..." onfocus="this.placeholder=''Notatki..." onblur="this.placeholder='Notatki...'" value="">
-								</div>
-								<div class="modal_line row shadow">
-									<input type="number" class="modal_cell col-12 col-sm-6 col-lg-3" step="0.01" value="2000.00" min="0.01">
-									<input type="date" class="modal_cell col-12 col-sm-6 col-lg-3" value="2019-01-31">
-									<input type="text" class="modal_cell col-12 col-lg-6" placeholder="Notatki..." onfocus="this.placeholder=''Notatki..." onblur="this.placeholder='Notatki...'" value="">
-								</div>
-								<div class="modal_line row shadow">
-									<input type="number" class="modal_cell col-12 col-sm-6 col-lg-3" step="0.01" value="2000.00" min="0.01">
-									<input type="date" class="modal_cell col-12 col-sm-6 col-lg-3" value="2019-01-31">
-									<input type="text" class="modal_cell col-12 col-lg-6" placeholder="Notatki..." onfocus="this.placeholder=''Notatki..." onblur="this.placeholder='Notatki...'" value="">
-								</div>
 								<div class="modal_line row shadow">
 									<input type="number" class="modal_cell col-12 col-sm-6 col-lg-3" step="0.01" value="2000.00" min="0.01">
 									<input type="date" class="modal_cell col-12 col-sm-6 col-lg-3" value="2019-01-31">
@@ -458,6 +439,9 @@ END;
 	<script src="https://www.amcharts.com/lib/4/core.js"></script>
 	<script src="https://www.amcharts.com/lib/4/charts.js"></script>
 	<script src="http://www.amcharts.com/lib/4/themes/kelly.js"></script>
+	<script type="text/javascript">
+		var expenses = JSON.parse('<?php echo json_encode($preExpenses); ?>');
+	</script>
 	<script src="js/piechart.js"></script>
 	
 </body>

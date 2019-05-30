@@ -13,12 +13,10 @@
  //Apply a theme
 am4core.useTheme(am4themes_kelly);
 
-// Create chart instance
+//Create chart instance
 var chart = am4core.create("chartdiv", am4charts.PieChart);
 
-var name1 = "Jedzenie";
-
-//expenses.length
+//Add data
 var step;
 for (step=0; step<expenses.length; step++) {
 	chart.data.push({"category": expenses[step].name, "value": expenses[step].eSum});
