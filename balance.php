@@ -251,7 +251,7 @@ echo <<<END
 							<div class="b_line row shadow">
 								<div class="blcell col-7">$incomeName</div>
 								<div class="brcell col-4">$incomeSumValue</div>
-								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
+								<button class="btn btn_list col-1" href="#incomeListModal" data-toggle="modal" data-target="#incomeListModal">
 									<span class="fa fa-file-text-o"></span>
 								</button>
 							</div>
@@ -287,7 +287,7 @@ echo <<<END
 							<div class="b_line row shadow">
 								<div class="blcell col-7">$expenseName</div>
 								<div class="brcell col-4">$expenseSumValue</div>
-								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
+								<button class="btn btn_list col-1" href="#expenseListModal" data-toggle="modal" data-target="#expenseListModal">
 									<span class="fa fa-file-text-o"></span>
 								</button>
 							</div>
@@ -378,8 +378,43 @@ END;
 			</div>
 		</div>
 	</div>
-<!------exampleListModal---------------------------------------------------------------------------->	
-	<div class="modal fade" id="listModal" tabindex="-1" role="dialog" aria-labelledby="listModalLabel" aria-hidden="true">
+<!------incomeListModal---------------------------------------------------------------------------->	
+	<div class="modal fade" id="incomeListModal" tabindex="-1" role="dialog" aria-labelledby="listModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<form class="modal-content" action="" method="post" enctype="multipart/form-data">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Szczegółowa lista</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<section>
+						<div>Nazwa kategorii</div>
+						<div class="container">
+								<div class="modal_line row shadow">
+									<input type="number" class="modal_cell col-12 col-sm-6 col-lg-3" step="0.01" value="2000.00" min="0.01">
+									<input type="date" class="modal_cell col-12 col-sm-6 col-lg-3" value="2019-01-31">
+									<input type="text" class="modal_cell col-12 col-lg-6" placeholder="Notatki..." onfocus="this.placeholder=''Notatki..." onblur="this.placeholder='Notatki...'" value="">
+								</div>
+						</div>
+						<div class="container">
+								<div class="modal_line row shadow">
+									<input type="number" class="modal_cell col-12 col-sm-6 col-lg-3" step="0.01" value="2000.00" min="0.01">
+									<input type="date" class="modal_cell col-12 col-sm-6 col-lg-3" value="2019-01-31">
+									<input type="text" class="modal_cell col-12 col-lg-6" placeholder="Notatki..." onfocus="this.placeholder=''Notatki..." onblur="this.placeholder='Notatki...'" value="">
+								</div>
+						</div>
+					</section>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-balance" data-dismiss="modal" value="Submit">OK</button>
+				</div>
+			</form>
+		</div>
+	</div>
+	<!------expenseListModal---------------------------------------------------------------------------->	
+	<div class="modal fade" id="expenseListModal" tabindex="-1" role="dialog" aria-labelledby="listModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg" role="document">
 			<form class="modal-content" action="" method="post" enctype="multipart/form-data">
 				<div class="modal-header">
@@ -396,11 +431,33 @@ END;
 						<div>Nazwa kategorii</div>
 						<div class="container">
 								<div class="modal_line row shadow">
-									<input type="number" class="modal_cell col-12 col-sm-6 col-lg-3" step="0.01" value="2000.00" min="0.01">
+									<input type="number" class="modal_cell col-12 col-sm-6 col-lg-3" step="0.01" value="2001.00" min="0.01">
 									<input type="date" class="modal_cell col-12 col-sm-6 col-lg-3" value="2019-01-31">
 									<input type="text" class="modal_cell col-12 col-lg-6" placeholder="Notatki..." onfocus="this.placeholder=''Notatki..." onblur="this.placeholder='Notatki...'" value="">
 								</div>
 						</div>
+						<?php
+						$tempValue="2001.00";
+						$tempDate="2019-01-31";
+						$tempCategory="Kategoria";
+						$tempPayment="Payment";
+						$tempComment="";
+echo <<<END
+						<div class="container">
+								<div class="modal_line row shadow">
+									<input type="number" class="modal_cell col-6 col-sm-4 col-lg-2" step="0.01" value="$tempValue" min="0.01">
+									<input type="date" class="modal_cell col-6 col-sm-4 col-lg-3" value="$tempDate">
+									<input type="text" class="modal_cell col-6 col-sm-4 col-lg-2" value="$tempCategory">
+									<input type="text" class="modal_cell col-6 col-sm-4 col-lg-2" value="$tempPayment">
+									<input type="text" class="modal_cell col-8 col-sm-6 col-lg-2" placeholder="Notatki..." onfocus="this.placeholder=''Notatki..." onblur="this.placeholder='Notatki...'" value="$tempComment">
+									<div class="modal_cell col-4 col-sm-2 col-lg-1" style="padding: 0;">
+										<button class="btn_settings modal_button" type="submit" value="Submit">E</button>
+										<button class="btn_settings bg_del modal_button" type="submit" value="Submit">X</button>
+									</div>
+								</div>
+						</div>
+END;
+						?>
 					</section>
 				</div>
 				<div class="modal-footer">
