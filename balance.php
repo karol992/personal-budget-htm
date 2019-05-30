@@ -431,10 +431,14 @@ END;
 <?php
 	foreach($expenses as $ex) {
 		$expenseName=$ex['name'];
-		$expenseSumValue=number_format((float)$ex['eSum'], 2, '.', ''); //always show 2 decimal places
 		$expenseCategoryID=$ex['id'];
+		/*$queryExpenseCategory=$db->prepare("
+		");*/
 		
-		$tempCategory=$expenseName;
+		
+		
+		
+		
 
 echo <<<END
 	<div class="modal fade" id="expenseListModal$expenseCategoryID" tabindex="-1" role="dialog" aria-labelledby="listModalLabel" aria-hidden="true">
@@ -459,12 +463,11 @@ END;
 			$tempComment="";
 echo <<<END
 								<div class="modal_line row shadow">
-									<input type="number" class="modal_cell col-6 col-sm-4 col-lg-2" step="0.01" value="$tempValue" min="0.01">
+									<input type="number" class="modal_cell col-12 col-sm-4 col-lg-2" step="0.01" value="$tempValue" min="0.01">
 									<input type="date" class="modal_cell col-6 col-sm-4 col-lg-3" value="$tempDate">
-									<input type="text" class="modal_cell col-6 col-sm-4 col-lg-2" value="$tempCategory">
 									<input type="text" class="modal_cell col-6 col-sm-4 col-lg-2" value="$tempPayment">
-									<input type="text" class="modal_cell col-8 col-sm-6 col-lg-2" placeholder="Notatki..." onfocus="this.placeholder=''Notatki..." onblur="this.placeholder='Notatki...'" value="$tempComment">
-									<div class="modal_cell col-4 col-sm-2 col-lg-1" style="padding: 0;">
+									<input type="text" class="modal_cell col-8 col-sm-9 col-lg-3" placeholder="Notatki..." onfocus="this.placeholder=''Notatki..." onblur="this.placeholder='Notatki...'" value="$tempComment">
+									<div class="modal_cell col-4 col-sm-3 col-lg-2" style="padding: 0;">
 										<button class="btn_settings modal_button" type="submit" value="Submit">E</button>
 										<button class="btn_settings bg_del modal_button" type="submit" value="Submit">X</button>
 									</div>
