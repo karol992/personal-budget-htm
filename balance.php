@@ -6,7 +6,136 @@
 		header('Location: index.php');
 		exit();
 	}
+/****LOAD*BALANCE*PERIOD****************************************************************/	
+	$date = new DateTime();
 	
+	//set default balance period
+	if (!isset($_SESSION['balance_start_day']) || 
+	!isset($_SESSION['balance_end_day'])) {
+		$_SESSION['balance_start_day'] = $date->format('Y-m-01');
+		$_SESSION['balance_end_day'] = $date->format('Y-m-t');
+	}
+	
+	//load dropdown balance period
+	if (isset($_POST['balance_period'])) {
+		switch ($_POST['balance_period']) {
+			case 'current_month': 
+				$_SESSION['balance_start_day'] = $date->format('Y-m-01');
+				$_SESSION['balance_end_day'] = $date->format('Y-m-t');
+				break;
+			case 'last_month':
+				$date->modify('-1 month');
+				$_SESSION['balance_start_day'] = $date->format('Y-m-01');
+				$_SESSION['balance_end_day'] = $date->format('Y-m-t');
+				break;
+			case 'current_year': 
+				$_SESSION['balance_start_day'] = $date->format('Y-01-01');
+				$_SESSION['balance_end_day'] = $date->format('Y-12-31');
+				break;
+		}
+		unset($_POST['balance_period']);
+	}
+	
+	//load custom(modal) balance period
+	if(isset($_POST['balance_start_day']) && isset($_POST['balance_end_day'])) {
+		$_SESSION['balance_start_day'] = $_POST['balance_start_day'];
+		$_SESSION['balance_end_day'] = $_POST['balance_end_day'];
+		unset($_POST['balance_start_day']);
+		unset($_POST['balance_end_day']);
+	}
+	
+	//convert period date for ribbon content
+	$startDate = new DateTime($_SESSION['balance_start_day']);
+	$endDate = new DateTime($_SESSION['balance_end_day']);
+	$_SESSION['balance_start_day_ribbon'] = $startDate->format('d.m.Y');
+	$_SESSION['balance_end_day_ribbon'] = $endDate->format('d.m.Y');
+/***LOAD*INCOME*SUMS****************************************************************/	
+	require_once "database.php";
+	
+	//load sums of incomes in incomes_category_assigned_to_users
+	$queryIncomes=$db->prepare("
+	SELECT icat.name, icat.id, SUM(ic.amount) iSum
+	FROM incomes ic
+	INNER JOIN incomes_category_assigned_to_users icat
+	ON ic.income_category_assigned_to_user_id = icat.id
+	AND (ic.date_of_income BETWEEN :start AND :end)
+	AND icat.id IN (
+		SELECT icat.id FROM incomes_category_assigned_to_users icat
+		INNER JOIN users
+		ON users.id = icat.user_id
+		AND users.id = :id
+	)
+	GROUP BY icat.id
+	ORDER BY iSum DESC;");
+	$queryIncomes->bindValue(':start',$_SESSION['balance_start_day'],PDO::PARAM_STR);
+	$queryIncomes->bindValue(':end',$_SESSION['balance_end_day'],PDO::PARAM_STR);
+	$queryIncomes->bindValue(':id',$_SESSION['id'],PDO::PARAM_INT);
+	$queryIncomes->execute();
+	$incomes=$queryIncomes->fetchAll();
+	
+	//load all incomes_category_assigned_to_users
+	$queryIncomeCategories=$db->prepare("
+	SELECT icat.name iname, icat.id iid FROM incomes_category_assigned_to_users icat
+	INNER JOIN users
+	ON users.id = icat.user_id
+	AND users.id = :id");
+	$queryIncomeCategories->bindValue(':id',$_SESSION['id'],PDO::PARAM_INT);
+	$queryIncomeCategories->execute();
+	$incomeCategories=$queryIncomeCategories->fetchAll();
+	
+	//fill incomes with zero sums, <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<IT WAS HARD TO SOLVE
+	foreach($incomeCategories as $ic) {
+		$key = array_search($ic['iname'], array_column($incomes, 'name')); //search the $incomes for a every incomes_category_assigned_to_users
+		if(strlen((string)$key)==0) { //that way because of [0] in array; isset, isnull, empty was useless here
+			$temp_array=array( 'name' => $ic['iname'], 0=> $ic['iname'],'id' => $ic['iid'], 1=> $ic['iid'], 'iSum' => 0.00,  2=> 0.00 );
+			array_push($incomes, $temp_array);
+		}
+		unset($key);
+	}
+/***LOAD*EXPENSE*SUMS****************************************************************/		
+	//load sums of expenses in expenses_category_assigned_to_users   //below: , ecat.id
+	$queryExpenses=$db->prepare("
+	SELECT ecat.name, ecat.id, SUM(ex.amount) eSum
+	FROM expenses ex
+	INNER JOIN expenses_category_assigned_to_users ecat
+	ON ex.expense_category_assigned_to_user_id = ecat.id
+	AND (ex.date_of_expense BETWEEN :start AND :end)
+	AND ecat.id IN (
+		SELECT ecat.id FROM expenses_category_assigned_to_users ecat
+		INNER JOIN users
+		ON users.id = ecat.user_id
+		AND users.id = :id
+	)
+	GROUP BY ecat.id
+	ORDER BY eSum DESC;");
+	$queryExpenses->bindValue(':start',$_SESSION['balance_start_day'],PDO::PARAM_STR);
+	$queryExpenses->bindValue(':end',$_SESSION['balance_end_day'],PDO::PARAM_STR);
+	$queryExpenses->bindValue(':id',$_SESSION['id'],PDO::PARAM_INT);
+	$queryExpenses->execute();
+	$expenses=$queryExpenses->fetchAll();
+	$preExpenses=$expenses;
+	
+	//load all expenses_category_assigned_to_users                //below: ecat.name, ecat.id
+	$queryExpenseCategories=$db->prepare("
+	SELECT ecat.name ename, ecat.id eid FROM expenses_category_assigned_to_users ecat
+	INNER JOIN users
+	ON users.id = ecat.user_id
+	AND users.id = :id");
+	$queryExpenseCategories->bindValue(':id',$_SESSION['id'],PDO::PARAM_INT);
+	$queryExpenseCategories->execute();
+	$expenseCategories=$queryExpenseCategories->fetchAll();
+	
+//fill expenses with zero sums, <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<IT WAS HARD TO SOLVE
+	foreach($expenseCategories as $ec) {
+		$key = array_search($ec['ename'], array_column($expenses, 'name')); //search the $expenses for a every expenses_category_assigned_to_users
+		if(strlen((string)$key)==0) { //that way because of [0] in array; isset, isnull, empty was useless here
+			//below: ,'id' => $ec['id'], 1=> $ec['id']  AND  1=> 0.00 INTO 2=> 0.00
+			$temp_array=array( 'name' => $ec['ename'], 0=> $ec['ename'], 'id' => $ec['eid'], 1=> $ec['eid'], 'eSum' => 0.00,  2=> 0.00 );
+			array_push($expenses, $temp_array);
+		}
+		unset($key);
+	}
+
 ?>
 <!DOCTYPE html>
 <html lang="pl">
@@ -32,10 +161,13 @@
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.min.js"></script>
 	<![endif]-->
 	
+	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	
+	<script src="delete_expense.js"></script>
+	
 </head>
 
 <body>
-	
 	<header>
 		<!-- Logo -->
 		<div class="col-sm-12 logo">
@@ -82,9 +214,10 @@
 						Zakres
 					</button>
 					<div class="dropdown-menu col-lg-2 col-md-3 col-sm-4 col-5" aria-labelledby="dropdownMenu2">
-						<button class="dropdown-item" type="button">Bieżący miesiąc</button>
-						<button class="dropdown-item" type="button">Poprzedni miesiąc</button>
-						<button class="dropdown-item" type="button">Bieżący rok</button>
+							<form action="balance.php" method="post">
+							<button class="dropdown-item" type="submit" name="balance_period" value="current_month">Bieżący miesiąc</button>
+							<button class="dropdown-item" type="submit" name="balance_period" value="last_month">Poprzedni miesiąc</button>
+							<button class="dropdown-item" type="submit" name="balance_period" value="current_year">Bieżący rok</button></form>
 						<button class="dropdown-item" type="button" href="#dateModal" data-toggle="modal" data-target="#dateModal">
 							Niestandardowy
 						</button>			
@@ -96,9 +229,9 @@
 		<div class="info_ribbon"> <!-- Display period of balance -->
 			<div class="inB">Zakres bilansu:</div>
 			<div class="inB">
-				<div class="inB">01.01.2019</div>
+				<div class="inB"><?php echo $_SESSION['balance_start_day_ribbon']; ?></div>
 				<div class="inB"> - </div>
-				<div class="inB">31.01.2019</div>
+				<div class="inB"><?php  echo $_SESSION['balance_end_day_ribbon']; ?></div>
 			</div>
 		</div>
 		
@@ -107,40 +240,30 @@
 			<div class="container"> 
 			
 				<div class="row">
-					
-					<div class="col-md-6"> <!-- Incomes categories. -->
-							Przychody
-						<div id="income_table">
+
+					<div class="col-md-6"> 
+							Przychody	
+						<div id="income_table"><!-- Incomes categories. -->
+							<?php
+								$totalIncome=(float)0;
+								foreach($incomes as $inc) {
+									$incomeName=$inc['name'];
+									$incomeSumValue=number_format((float)$inc['iSum'], 2, '.', ''); //always show 2 decimal places
+									$totalIncome+=$incomeSumValue;
+									$incomeCategoryID=$inc['id']; //<<<<<<<<<<<<<<<<<<<<<<< BELOW: IT WAS HARD TO SOLVE/FIND
+echo <<<END
 							<div class="b_line row shadow">
-								<div class="blcell col-7">Wynagrodzenie</div>
-								<div class="brcell col-4">5642.00</div>
-								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
+								<div class="blcell col-7">$incomeName</div>
+								<div class="brcell col-4">$incomeSumValue</div>
+								<button class="btn btn_list col-1" href="#incomeListModal$incomeCategoryID" data-toggle="modal" data-target="#incomeListModal$incomeCategoryID">
 									<span class="fa fa-file-text-o"></span>
 								</button>
 							</div>
-							<div class="b_line row shadow">
-								<div class="blcell col-7">Odsetki bankowe</div>
-								<div class="brcell col-4">0.18</div>
-								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-									<span class="fa fa-file-text-o"></span>
-								</button>
-							</div>
-							<div class="b_line row shadow">
-								<div class="blcell col-7">Sprzedaż na allegro</div>
-								<div class="brcell col-4">50.00</div>
-								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-									<span class="fa fa-file-text-o"></span>
-								</button>
-							</div>
-							<div class="b_line row shadow">
-								<div class="blcell col-7">Inne</div>
-								<div class="brcell col-4">0.00</div>
-								<button class="btn btn_list col-1" href="#legendModal" data-toggle="modal" data-target="#legendModal">
-									<span class="fa fa-file-text-o"></span>
-								</button>
-							</div>
+END;
+								}
+							?>
 						</div>
-						
+	
 						Wykres wydatków
 						<div class="b_border shadow"> <!-- Pie chart with expenses. -->
 							<div class="ratioparent">
@@ -152,131 +275,30 @@
 								Legenda
 							</button>
 						</div>
-							
+		
 					</div>
 					
-					<div class="col-md-6"> <!-- Expenses categories. -->
+					<div class="col-md-6"> 
 						Wydatki:
-						<div id="expense_table">
+						<div id="expense_table"><!-- Expenses categories. -->
+							<?php
+								$totalExpense=(float)0;
+								foreach($expenses as $ex) {
+									$expenseName=$ex['name'];
+									$expenseSumValue=number_format((float)$ex['eSum'], 2, '.', ''); //always show 2 decimal places
+									$totalExpense+=$expenseSumValue;
+									$expenseCategoryID=$ex['id']; //<<<<<<<<<<<<<<<<<<<<<<< BELOW: IT WAS HARD TO SOLVE/FIND
+echo <<<END
 							<div class="b_line row shadow">
-								<div class="blcell col-7">Jedzenie</div>
-								<div class="brcell col-4">623.12</div>
-								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
+								<div class="blcell col-7">$expenseName</div>
+								<div class="brcell col-4">$expenseSumValue</div>
+								<button class="btn btn_list col-1" href="#expenseListModal$expenseCategoryID" data-toggle="modal" data-target="#expenseListModal$expenseCategoryID">
 									<span class="fa fa-file-text-o"></span>
 								</button>
 							</div>
-							<div class="b_line row shadow">
-								<div class="blcell col-7">Mieszkanie</div>
-								<div class="brcell col-4">1450.00</div>
-								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-									<span class="fa fa-file-text-o"></span>
-								</button>
-							</div>
-							<div class="b_line row shadow">
-								<div class="blcell col-7">Transport</div>
-								<div class="brcell col-4">412.35</div>
-								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-									<span class="fa fa-file-text-o"></span>
-								</button>
-							</div>
-							<div class="b_line row shadow">
-								<div class="blcell col-7">Telekomunikacja</div>
-								<div class="brcell col-4">140.00</div>
-								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-									<span class="fa fa-file-text-o"></span>
-								</button>
-							</div>
-							<div class="b_line row shadow">
-								<div class="blcell col-7">Opieka zdrowotna</div>
-								<div class="brcell col-4">20.00</div>
-								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-									<span class="fa fa-file-text-o"></span>
-								</button>
-							</div>
-							<div class="b_line row shadow">
-								<div class="blcell col-7">Ubranie</div>
-								<div class="brcell col-4">120.00</div>
-								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-									<span class="fa fa-file-text-o"></span>
-								</button>
-							</div>
-							<div class="b_line row shadow">
-								<div class="blcell col-7">Higiena</div>
-								<div class="brcell col-4">29.80</div>
-								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-									<span class="fa fa-file-text-o"></span>
-								</button>
-							</div>
-							<div class="b_line row shadow">
-								<div class="blcell col-7">Dzieci</div>
-								<div class="brcell col-4">0.00</div>
-								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-									<span class="fa fa-file-text-o"></span>
-								</button>
-							</div>
-							<div class="b_line row shadow">
-								<div class="blcell col-7">Rozrywka</div>
-								<div class="brcell col-4">151.00</div>
-								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-									<span class="fa fa-file-text-o"></span>
-								</button>
-							</div>
-							<div class="b_line row shadow">
-								<div class="blcell col-7">Wycieczka</div>
-								<div class="brcell col-4">650.00</div>
-								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-									<span class="fa fa-file-text-o"></span>
-								</button>
-							</div>
-							<div class="b_line row shadow">
-								<div class="blcell col-7">Szkolenia</div>
-								<div class="brcell col-4">0.00</div>
-								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-									<span class="fa fa-file-text-o"></span>
-								</button>
-							</div>
-							<div class="b_line row shadow">
-								<div class="blcell col-7">Książki</div>
-								<div class="brcell col-4">99.00</div>
-								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-									<span class="fa fa-file-text-o"></span>
-								</button>
-							</div>
-							<div class="b_line row shadow">
-								<div class="blcell col-7">Oszczędności</div>
-								<div class="brcell col-4">0.00</div>
-								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-									<span class="fa fa-file-text-o"></span>
-								</button>
-							</div>
-							<div class="b_line row shadow">
-								<div class="blcell col-7">Emertytura</div>
-								<div class="brcell col-4">0.00</div>
-								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-									<span class="fa fa-file-text-o"></span>
-								</button>
-							</div>
-							<div class="b_line row shadow">
-								<div class="blcell col-7">Spłata długów</div>
-								<div class="brcell col-4">0.00</div>
-								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-									<span class="fa fa-file-text-o"></span>
-								</button>
-							</div>
-							<div class="b_line row shadow">
-								<div class="blcell col-7">Darowizna</div>
-								<div class="brcell col-4">55.00</div>
-								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-									<span class="fa fa-file-text-o"></span>
-								</button>
-							</div>
-							<div class="b_line row shadow">
-								<div class="blcell col-7">Inne wydatki</div>
-								<div class="brcell col-4">44.00</div>
-								<button class="btn btn_list col-1" href="#listModal" data-toggle="modal" data-target="#listModal">
-									<span class="fa fa-file-text-o"></span>
-								</button>
-							</div>
+END;
+								}
+							?>
 						</div>
 					</div>
 					 
@@ -295,14 +317,29 @@
 					<div class="col-md-6">
 						<div class="b_line b_sum row shadow">
 							<div class="blcell col-7">Bilans</div>
-							<div class="brcell col-5">1897.91</div>
+							<div class="brcell col-5"><?php				
+								$total=$totalIncome-$totalExpense;
+								echo number_format((float)($total), 2, '.', ''); 
+							?></div>
 						</div>
 					</div>
 					
 					<div class="col-md-6">
 						<div class="b_line b_motivation shadow">
+							<?php
+							if ($total>=0) {
+echo <<<END
 							<div class="inB"><span>Gratulacje. </span></div>
 							<div class="inB"><span>Świetnie zarządzasz finansami!</span></div>
+END;
+							} else {
+echo <<<END
+							<div class="inB" style="color:red"><span>Uważaj, </span></div>
+							<div class="inB" style="color:red"><span>wpadasz w długi!</span></div>
+END;
+							}
+							?>
+							
 						</div>
 					</div>
 				
@@ -317,72 +354,84 @@
 <!------dateModal----------------------------------------------------------------------------------->	
 	<div class="modal fade" id="dateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog" role="document">
-			<form class="modal-content" action="" method="post" enctype="multipart/form-data">
-				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">Niestandardowy okres</h5>
-					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</div>
-				<div class="modal-body">
-					<section>
-						<div class="container">
-							<div class="row">
-								<label class="offset-1 col-2" for="income_date">Od: </label>
-								<input class="col-7" type="date" name="income_date" value="2019-01-01">
+			<div class="modal-content">
+				<form action="balance.php" method="post" enctype="multipart/form-data">
+					<div class="modal-header">
+						<h5 class="modal-title">Niestandardowy okres</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<section>
+							<div class="container">
+								<div class="row">
+									<label class="offset-1 col-2" for="balance_start_day">Od: </label>
+									<input class="col-7" type="date" name="balance_start_day" value="<?php echo $_SESSION['balance_start_day']; ?>">
+								</div>
+								<div class="row">
+									<label class="offset-1 col-2" for="balance_end_day">Do: </label>
+									<input class="col-7" type="date" name="balance_end_day" value="<?php echo $_SESSION['balance_end_day']; ?>">
+								</div>
 							</div>
-							<div class="row">
-								<label class="offset-1 col-2" for="income_date">Do: </label>
-								<input class="col-7" type="date" name="income_date" value="2019-01-31">
-							</div>
-						</div>
-					</section>
-				</div>
-				<div class="modal-footer">
-					<button type="submit" class="btn btn-balance" data-dismiss="modal" value="Submit">OK</button>
-				</div>
-			</form>
+						</section>
+					</div>
+					<div class="modal-footer">
+						<button type="submit" class="btn btn-balance" value="Submit">OK</button>
+					</div>
+				</form>
+			</div>
 		</div>
 	</div>
-<!------exampleListModal---------------------------------------------------------------------------->	
-	<div class="modal fade" id="listModal" tabindex="-1" role="dialog" aria-labelledby="listModalLabel" aria-hidden="true">
+<!------incomeListModal---------------------------------------------------------------------------->	
+	<?php
+	foreach($incomes as $ic) {
+		$incomeName=$ic['name'];
+		$incomeCategoryID=$ic['id'];
+		$queryIncomeCategory=$db->prepare("
+		SELECT ic.id eID, ic.amount, ic.date_of_income date, ic.income_comment comment FROM incomes ic 
+		WHERE ic.income_category_assigned_to_user_id = :catID
+		ORDER BY date DESC
+		");
+		$queryIncomeCategory->bindValue(":catID",$incomeCategoryID,PDO::PARAM_INT);
+		$queryIncomeCategory->execute();
+		$modalIncomeList=$queryIncomeCategory->fetchAll();
+
+echo <<<END
+	<div class="modal fade" id="incomeListModal$incomeCategoryID" tabindex="-1" role="dialog" aria-labelledby="listModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg" role="document">
 			<form class="modal-content" action="" method="post" enctype="multipart/form-data">
 				<div class="modal-header">
-					<h5 class="modal-title" id="exampleModalLabel">Szczegółowa lista</h5>
+					<div class="modal-title" id="incomeModalLabel$incomeCategoryID">$incomeName</div>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
 				<div class="modal-body">
 					<section>
-						<div>Nazwa kategorii</div>
+						<h5>Szczegółowa lista</h5>
 						<div class="container">
+END;
+		
+		foreach ($modalIncomeList as $iList) {
+			$tempValue=$iList['amount'];
+			$tempDate=$iList['date'];
+			$tempComment=$iList['comment'];
+			$tempExpenseID=$iList['eID'];
+echo <<<END
 								<div class="modal_line row shadow">
-									<input type="number" class="modal_cell col-12 col-sm-6 col-lg-3" step="0.01" value="2000.00" min="0.01">
-									<input type="date" class="modal_cell col-12 col-sm-6 col-lg-3" value="2019-01-31">
-									<input type="text" class="modal_cell col-12 col-lg-6" placeholder="Notatki..." onfocus="this.placeholder=''Notatki..." onblur="this.placeholder='Notatki...'" value="">
+									<input type="number" class="modal_cell col-6 col-sm-6 col-lg-2" step="0.01" value="$tempValue" min="0.01">
+									<input type="date" class="modal_cell col-6 col-sm-6 col-lg-3" value="$tempDate">
+									<input type="text" class="modal_cell col-8 col-sm-9 col-lg-5" placeholder="Notatki..." onfocus="this.placeholder=''Notatki..." onblur="this.placeholder='Notatki...'" value="$tempComment">
+									<div class="container modal_cell col-4 col-sm-3 col-lg-2" style="padding: 0;">
+										<button class="btn_settings modal_button" type="submit" value="Submit"><i class="fa fa-pencil fa-fw"></i></button>
+										<button class="btn_settings bg_del modal_button"><i class="fa fa-trash fa-fw"></i></button> <!-- $tempExpenseID -->
+									</div>
 								</div>
-								<div class="modal_line row shadow">
-									<input type="number" class="modal_cell col-12 col-sm-6 col-lg-3" step="0.01" value="2000.00" min="0.01">
-									<input type="date" class="modal_cell col-12 col-sm-6 col-lg-3" value="2019-01-31">
-									<input type="text" class="modal_cell col-12 col-lg-6" placeholder="Notatki..." onfocus="this.placeholder=''Notatki..." onblur="this.placeholder='Notatki...'" value="">
-								</div>
-								<div class="modal_line row shadow">
-									<input type="number" class="modal_cell col-12 col-sm-6 col-lg-3" step="0.01" value="2000.00" min="0.01">
-									<input type="date" class="modal_cell col-12 col-sm-6 col-lg-3" value="2019-01-31">
-									<input type="text" class="modal_cell col-12 col-lg-6" placeholder="Notatki..." onfocus="this.placeholder=''Notatki..." onblur="this.placeholder='Notatki...'" value="">
-								</div>
-								<div class="modal_line row shadow">
-									<input type="number" class="modal_cell col-12 col-sm-6 col-lg-3" step="0.01" value="2000.00" min="0.01">
-									<input type="date" class="modal_cell col-12 col-sm-6 col-lg-3" value="2019-01-31">
-									<input type="text" class="modal_cell col-12 col-lg-6" placeholder="Notatki..." onfocus="this.placeholder=''Notatki..." onblur="this.placeholder='Notatki...'" value="">
-								</div>
-								<div class="modal_line row shadow">
-									<input type="number" class="modal_cell col-12 col-sm-6 col-lg-3" step="0.01" value="2000.00" min="0.01">
-									<input type="date" class="modal_cell col-12 col-sm-6 col-lg-3" value="2019-01-31">
-									<input type="text" class="modal_cell col-12 col-lg-6" placeholder="Notatki..." onfocus="this.placeholder=''Notatki..." onblur="this.placeholder='Notatki...'" value="">
-								</div>
+END;
+		 
+		}
+echo <<<END
 						</div>
 					</section>
 				</div>
@@ -392,6 +441,78 @@
 			</form>
 		</div>
 	</div>
+END;
+
+	}
+?>
+	<!------expenseListModal-------------------------------------------->
+<?php
+	foreach($expenses as $ex) {
+		$expenseName=$ex['name'];
+		$expenseCategoryID=$ex['id'];
+		$queryExpenseCategory=$db->prepare("
+		SELECT ex.id eID, pm.name payment, ex.amount, ex.date_of_expense date, ex.expense_comment comment FROM expenses ex 
+		INNER JOIN payment_methods_assigned_to_users pm
+		WHERE ex.expense_category_assigned_to_user_id = :catID
+		AND ex.payment_method_assigned_to_user_id = pm.id
+		ORDER BY date DESC
+		");
+		$queryExpenseCategory->bindValue(":catID",$expenseCategoryID,PDO::PARAM_INT);
+		$queryExpenseCategory->execute();
+		$modalExpenseList=$queryExpenseCategory->fetchAll();
+
+echo <<<END
+	<div class="modal fade" id="expenseListModal$expenseCategoryID" tabindex="-1" role="dialog" aria-labelledby="listModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<form class="modal-content" action="" method="post" enctype="multipart/form-data">
+				<div class="modal-header">
+					<div class="modal-title" id="expenseModalLabel$expenseCategoryID">$expenseName</div>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<section>
+						<h5>Szczegółowa lista</h5>
+						<div class="container">
+END;
+		
+		foreach ($modalExpenseList as $eList) {
+			$tempValue=$eList['amount'];
+			$tempDate=$eList['date'];
+			$tempPayment=$eList['payment'];
+			$tempComment=$eList['comment'];
+			$tempExpenseID=$eList['eID'];
+echo <<<END
+								<div class="modal_line row shadow">
+									<input type="number" class="modal_cell col-12 col-sm-4 col-lg-2" step="0.01" value="$tempValue" min="0.01">
+									<input type="date" class="modal_cell col-6 col-sm-4 col-lg-3" value="$tempDate">
+									<input type="text" class="modal_cell col-6 col-sm-4 col-lg-2" value="$tempPayment">
+									<input type="text" class="modal_cell col-8 col-sm-9 col-lg-3" placeholder="Notatki..." onfocus="this.placeholder=''Notatki..." onblur="this.placeholder='Notatki...'" value="$tempComment">
+									<div class="container modal_cell col-4 col-sm-3 col-lg-2" style="padding: 0;">
+										<button class="btn_settings modal_button" type="submit" value="Submit"><i class="fa fa-trash fa-fw"></i></button>
+										<button class="btn_settings bg_del modal_button"><i class="fa fa-pencil fa-fw"></i></button><!-- $tempExpenseID -->
+									</div>
+								</div>
+END;
+		 
+		}
+echo <<<END
+						</div>
+					</section>
+				</div>
+				<div class="modal-footer">
+					<button type="submit" class="btn btn-balance" data-dismiss="modal" value="Submit">OK</button>
+				</div>
+			</form>
+		</div>
+	</div>
+END;
+
+	}
+?>	
+	
+	
 <!---legendModal------------------------------------------------------------------------------------------>
 	<div class="modal fade" id="legendModal" tabindex="-1" role="dialog" aria-labelledby="legendModalLabel" aria-hidden="true">
 		<div class="modal-dialog" role="document">
@@ -414,15 +535,19 @@
 <!-------------------------------------------------------------------------------------------------------------------------->
 
 	
-	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-	
+<!---	--->
 	
 	<script src="https://www.amcharts.com/lib/4/core.js"></script>
 	<script src="https://www.amcharts.com/lib/4/charts.js"></script>
 	<script src="http://www.amcharts.com/lib/4/themes/kelly.js"></script>
+	<script type="text/javascript">
+		var expenses = JSON.parse('<?php echo json_encode($preExpenses); ?>');
+	</script>
 	<script src="js/piechart.js"></script>
+	<script src="js/delete_expense.js"></script>
 	
 </body>
 </html>

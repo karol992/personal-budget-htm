@@ -47,3 +47,12 @@ h1 {
 .input_error {
 	color: red;
 }
+.info_ribbon {
+	background-color: #BBCC99;
+	color: #FFFBD9;
+	text-shadow: -1px 0 #7F9949, 0 1px #7F9949, 1px 0 #7F9949, 0 -1px #7F9949;
+	text-align: center;
+}
+.inB {
+	display: inline-block;
+}
