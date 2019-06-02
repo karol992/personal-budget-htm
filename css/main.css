@@ -56,3 +56,6 @@ h1 {
 .inB {
 	display: inline-block;
 }
+.hidden {
+	display: none;
+}
