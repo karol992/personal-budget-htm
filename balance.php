@@ -163,11 +163,12 @@
 	
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 	
-	<script src="delete_expense.js"></script>
+	<script src="js/main.js"></script>
 	
 </head>
 
 <body>
+
 	<header>
 		<!-- Logo -->
 		<div class="col-sm-12 logo">
@@ -400,7 +401,7 @@ END;
 echo <<<END
 	<div class="modal fade" id="incomeListModal$incomeCategoryID" tabindex="-1" role="dialog" aria-labelledby="listModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg" role="document">
-			<form class="modal-content" action="" method="post" enctype="multipart/form-data">
+			<div class="modal-content" action="" method="post" enctype="multipart/form-data">
 				<div class="modal-header">
 					<div class="modal-title" id="incomeModalLabel$incomeCategoryID">$incomeName</div>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -417,17 +418,19 @@ END;
 			$tempValue=$iList['amount'];
 			$tempDate=$iList['date'];
 			$tempComment=$iList['comment'];
-			$tempExpenseID=$iList['eID'];
+			$tempIncomeID=$iList['eID'];
 echo <<<END
-								<div class="modal_line row shadow">
-									<input type="number" class="modal_cell col-6 col-sm-6 col-lg-2" step="0.01" value="$tempValue" min="0.01">
-									<input type="date" class="modal_cell col-6 col-sm-6 col-lg-3" value="$tempDate">
-									<input type="text" class="modal_cell col-8 col-sm-9 col-lg-5" placeholder="Notatki..." onfocus="this.placeholder=''Notatki..." onblur="this.placeholder='Notatki...'" value="$tempComment">
-									<div class="container modal_cell col-4 col-sm-3 col-lg-2" style="padding: 0;">
-										<button class="btn_settings modal_button" type="submit" value="Submit"><i class="fa fa-pencil fa-fw"></i></button>
-										<button class="btn_settings bg_del modal_button"><i class="fa fa-trash fa-fw"></i></button> <!-- $tempExpenseID -->
+								<form action="edit_income.php" target="" method="post" class="modal_line row shadow" id="tempIncome$tempIncomeID">
+									<input type="hidden" name="modalTarget" value="incomeListModal$incomeCategoryID" />
+									<input type="hidden" name="incomeId" value="$tempIncomeID" />
+									<input type="number" name="amount" class="modal_cell col-6 col-sm-6 col-lg-2" step="0.01" value="$tempValue" min="0.01">
+									<input type="date" name="date" class="modal_cell col-6 col-sm-6 col-lg-3" value="$tempDate">
+									<input type="text" name="comment" class="modal_cell col-8 col-sm-9 col-lg-5" placeholder="Notatki..." onfocus="this.placeholder=''Notatki..." onblur="this.placeholder='Notatki...'" value="$tempComment">
+									<div class="container modal_cell col-2 col-lg-2" style="padding: 0;">
+										<button name="action" value="update" type="submit" class="btn_settings modal_button"><i class="fa fa-floppy-o fa-fw"></i></button> 
+										<button name="action" value="delete" type="submit" class="btn_settings bg_del modal_button"><i class="fa fa-trash fa-fw"></i></button>
 									</div>
-								</div>
+								</form>
 END;
 		 
 		}
@@ -438,7 +441,7 @@ echo <<<END
 				<div class="modal-footer">
 					<button type="submit" class="btn btn-balance" data-dismiss="modal" value="Submit">OK</button>
 				</div>
-			</form>
+			</div>
 		</div>
 	</div>
 END;
@@ -460,11 +463,12 @@ END;
 		$queryExpenseCategory->bindValue(":catID",$expenseCategoryID,PDO::PARAM_INT);
 		$queryExpenseCategory->execute();
 		$modalExpenseList=$queryExpenseCategory->fetchAll();
+		
 
 echo <<<END
 	<div class="modal fade" id="expenseListModal$expenseCategoryID" tabindex="-1" role="dialog" aria-labelledby="listModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg" role="document">
-			<form class="modal-content" action="" method="post" enctype="multipart/form-data">
+			<div class="modal-content">
 				<div class="modal-header">
 					<div class="modal-title" id="expenseModalLabel$expenseCategoryID">$expenseName</div>
 					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -484,16 +488,21 @@ END;
 			$tempComment=$eList['comment'];
 			$tempExpenseID=$eList['eID'];
 echo <<<END
-								<div class="modal_line row shadow">
-									<input type="number" class="modal_cell col-12 col-sm-4 col-lg-2" step="0.01" value="$tempValue" min="0.01">
-									<input type="date" class="modal_cell col-6 col-sm-4 col-lg-3" value="$tempDate">
-									<input type="text" class="modal_cell col-6 col-sm-4 col-lg-2" value="$tempPayment">
-									<input type="text" class="modal_cell col-8 col-sm-9 col-lg-3" placeholder="Notatki..." onfocus="this.placeholder=''Notatki..." onblur="this.placeholder='Notatki...'" value="$tempComment">
-									<div class="container modal_cell col-4 col-sm-3 col-lg-2" style="padding: 0;">
-										<button class="btn_settings modal_button" type="submit" value="Submit"><i class="fa fa-trash fa-fw"></i></button>
-										<button class="btn_settings bg_del modal_button"><i class="fa fa-pencil fa-fw"></i></button><!-- $tempExpenseID -->
-									</div>
-								</div>
+									
+									<form action="edit_expense.php" target="" method="post" class="modal_line row shadow" id="tempExpense$tempExpenseID">
+											
+											<input type="hidden" name="modalTarget" value="expenseListModal$expenseCategoryID" />
+											<input type="hidden" name="expenseId" value="$tempExpenseID" />
+											<input type="number" name="amount" class="modal_cell col-12 col-sm-4 col-lg-2" step="0.01" value="$tempValue" min="0.01" />
+											<input type="date" name="date" class="modal_cell col-6 col-sm-4 col-lg-3" value="$tempDate" />
+											<input type="text" name="payment" class="modal_cell col-6 col-sm-4 col-lg-2" value="$tempPayment" />
+											<input type="text" name="comment" class="modal_cell col-8 col-lg-3" placeholder="Notatki..." onfocus="this.placeholder=''Notatki..." onblur="this.placeholder='Notatki...'" value="$tempComment" />
+											<div class="container modal_cell col-2 col-lg-2" style="padding: 0;">
+												<button name="action" value="update" type="submit" class="btn_settings modal_button"><i class="fa fa-floppy-o fa-fw"></i></button> 
+												<button name="action" value="delete" type="submit" class="btn_settings bg_del modal_button"><i class="fa fa-trash fa-fw"></i></button>
+											</div>
+
+									</form>
 END;
 		 
 		}
@@ -502,9 +511,9 @@ echo <<<END
 					</section>
 				</div>
 				<div class="modal-footer">
-					<button type="submit" class="btn btn-balance" data-dismiss="modal" value="Submit">OK</button>
+					<button type="close" onclick="reloadAfterChange ()" class="btn btn-balance" data-dismiss="modal">OK</button>
 				</div>
-			</form>
+			</div>
 		</div>
 	</div>
 END;
@@ -533,21 +542,30 @@ END;
 		</div>
 	</div>
 <!-------------------------------------------------------------------------------------------------------------------------->
-
 	
 	
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 <!---	--->
+	<?php
+	if(isset($_SESSION['modalTarget'])) {
+		$modalTarget=$_SESSION['modalTarget'];
+echo<<<END
+	<script>
+		$('#$modalTarget').modal('show');
+	</script>
+END;
+		unset($_SESSION['modalTarget']);
+	}
+	?>
 	
 	<script src="https://www.amcharts.com/lib/4/core.js"></script>
 	<script src="https://www.amcharts.com/lib/4/charts.js"></script>
 	<script src="http://www.amcharts.com/lib/4/themes/kelly.js"></script>
-	<script type="text/javascript">
+	<script>
 		var expenses = JSON.parse('<?php echo json_encode($preExpenses); ?>');
 	</script>
 	<script src="js/piechart.js"></script>
 	<script src="js/delete_expense.js"></script>
-	
 </body>
 </html>

@@ -112,7 +112,7 @@ input[type=date]::-webkit-calendar-picker-indicator {
 .modal_button {
 	float: left; 
 	width: 50%; 
-	height: 37px;
+	height:100%;
 }
 
 /* from settings.css*/

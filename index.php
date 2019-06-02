@@ -13,7 +13,7 @@
 	if (isset($_SESSION['e_email'])) unset($_SESSION['e_email']);
 	if (isset($_SESSION['e_password'])) unset($_SESSION['e_password']);
 	
-	if ((isset($_SESSION['logged'])) && ($_SESSION['logged']==true)) {
+	if (isset($_SESSION['id'])) {
 		header('Location: menu.php');
 		exit();
 	}

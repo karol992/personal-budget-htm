@@ -109,14 +109,8 @@
 				<div>Kategoria: </div>
 				<select name="income_category">
 					<?php
-						$isFirstIC=true;
 						foreach ($incomeCategories as $incCaty) {
-							if ($isFirstIC) {
-								echo '<option value="'.$incCaty['id'].'" selected> '.$incCaty['name'].' </option>';
-								$isFirstIC=false;
-							} else {
-								echo '<option value="'.$incCaty['id'].'"> '.$incCaty['name'].' </option>';
-							}
+							echo '<option value="'.$incCaty['id'].'"> '.$incCaty['name'].' </option>';
 						}
 					?>
 				</select>
